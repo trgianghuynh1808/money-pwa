@@ -19,7 +19,7 @@ export default function Home() {
           >
             By{' '}
             <Image
-              src="/money-pwa/vercel.svg"
+              src="/vercel.svg"
               alt="Vercel Logo"
               className="dark:invert"
               width={100}
