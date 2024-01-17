@@ -78,7 +78,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      URL: 'https://www.trgianghuynh1808.github.io/money-pwa/'
     runs-on: ubuntu-latest
     needs: build
     steps:
