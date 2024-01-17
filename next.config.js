@@ -19,7 +19,6 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: "/money-pwa",
 
   /**
    * Disable server-based image optimization. Next.js does not support
