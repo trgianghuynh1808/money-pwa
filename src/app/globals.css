@@ -16,15 +16,6 @@
     }
 }
 
-body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(
-            to bottom,
-            transparent,
-            rgb(var(--background-end-rgb))
-    ) rgb(var(--background-start-rgb));
-}
-
 /* prevent pull-to-refresh for Safari 16+ */
 @media screen and (pointer: coarse) {
     @supports (-webkit-backdrop-filter: blur(1px)) and (overscroll-behavior-y: none) {
