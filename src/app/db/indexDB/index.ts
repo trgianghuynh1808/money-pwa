@@ -7,6 +7,10 @@ type Name = StoreNames<IIndexDBSchema>
 
 type Actions<T = any> = {
   getAll: () => Promise<T[]>
+  getWithFilter: (
+    filter: (value: T) => boolean,
+    sort?: (a: T, b: T) => number,
+  ) => Promise<T[]>
   getDetails: (key: string) => Promise<T>
   add: (payload: Omit<T, 'id'>) => Promise<string | undefined>
   update: (key: string, value: Partial<Omit<T, 'id'>>) => Promise<void>
@@ -39,9 +43,13 @@ class IndexDB {
   public getActions<T = any>(storeName: Name): Actions<T> {
     return {
       getAll: () => this._getAll<T>(storeName),
+      getWithFilter: (
+        filter: (value: T) => boolean,
+        sort?: (a: T, b: T) => number,
+      ) => this._getWithFilter<T>(storeName, filter, sort),
       getDetails: (key: string) => this._getDetails<T>(storeName, key),
       add: (payload: Omit<T, 'id'>) => this._add<T>(storeName, payload),
-      update: (key: string, value: Partial<Omit<T, "id">>) =>
+      update: (key: string, value: Partial<Omit<T, 'id'>>) =>
         this._update<T>(storeName, key, value),
       delete: (key: string) => this._delete(storeName, key),
       clearStore: () => this._clearStore(storeName),
@@ -50,6 +58,19 @@ class IndexDB {
 
   private async _getAll<T = any>(storeName: Name): Promise<T[]> {
     return (await this._db?.getAll(storeName)) as T[]
+  }
+
+  private async _getWithFilter<T = any>(
+    storeName: Name,
+    filter: (value: T) => boolean,
+    sort?: (a: T, b: T) => number,
+  ): Promise<T[]> {
+    const all = await this._getAll<T>(storeName)
+    const filtered = (all ?? []).filter(filter)
+
+    if (!sort) return filtered
+
+    return (filtered ?? []).sort(sort)
   }
 
   private async _getDetails<T = any>(storeName: Name, key: string): Promise<T> {
