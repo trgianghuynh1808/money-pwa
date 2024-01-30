@@ -1,3 +1,4 @@
 import indexDB from './indexDB'
+import firebaseDB from './firebaseDB'
 
-export { indexDB }
+export { indexDB, firebaseDB }

@@ -2,21 +2,9 @@ import { IDBPDatabase, openDB, StoreNames } from 'idb'
 import { v4 as uuidv4 } from 'uuid'
 // *INFO: internal modules
 import { IIndexDBSchema } from './schema'
+import { Actions } from '@/app/interfaces'
 
 type Name = StoreNames<IIndexDBSchema>
-
-type Actions<T = any> = {
-  getAll: () => Promise<T[]>
-  getWithFilter: (
-    filter: (value: T) => boolean,
-    sort?: (a: T, b: T) => number,
-  ) => Promise<T[]>
-  getDetails: (key: string) => Promise<T>
-  add: (payload: Omit<T, 'id'>) => Promise<string | undefined>
-  update: (key: string, value: Partial<Omit<T, 'id'>>) => Promise<void>
-  delete: (key: string) => Promise<void>
-  clearStore: () => Promise<void>
-}
 
 class IndexDB {
   private _db: IDBPDatabase<IIndexDBSchema> | null
@@ -87,6 +75,8 @@ class IndexDB {
     return await this._db?.add(storeName, {
       ...value,
       id: newId,
+      created_at: new Date(),
+      removed: false,
     } as any)
   }
 
