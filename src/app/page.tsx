@@ -8,13 +8,9 @@ export default function Home() {
   async function onClickAction() {
     console.log('run action')
     const actions: Actions<IUser> = firebaseDB.getActions<IUser>('users')
+    const testId = 'f59b457e-78cd-452a-aaa0-72df07216e79'
 
-    const data = await actions.add({
-      username: 'test',
-      code: 'test',
-    })
-
-    console.log(data)
+    await actions.delete(testId)
   }
 
   return (

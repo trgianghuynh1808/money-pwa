@@ -40,7 +40,7 @@ class FirebaseDB {
       add: (payload: TAddPayload) => this._add<T>(collectionName, payload),
       // update: (key: string, value: Partial<Omit<T, 'id'>>) =>
       //   this._update<T>(collectionName, key, value),
-      // delete: (key: string) => this._delete(collectionName, key),
+      delete: (key: string) => this._delete(collectionName, key),
       // clearStore: () => this._clearStore(collectionName),
     }
   }
@@ -92,6 +92,11 @@ class FirebaseDB {
     await setDoc(doc(docRef, newId), newData)
 
     return newData as T
+  }
+
+  private _delete(collectionName: string, id: string): void {
+    const docRef = doc(this._db, collectionName, id)
+    setDoc(docRef, { removed: true, removed_at: new Date() }, { merge: true })
   }
 }
 
