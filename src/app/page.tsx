@@ -2,15 +2,18 @@
 
 import Link from 'next/link'
 import { firebaseDB } from '@/app/db'
-import { Actions, IUser } from '@/app/interfaces'
+import { FirebaseActions, IUser } from '@/app/interfaces'
 
 export default function Home() {
   async function onClickAction() {
     console.log('run action')
-    const actions: Actions<IUser> = firebaseDB.getActions<IUser>('users')
-    const testId = 'f59b457e-78cd-452a-aaa0-72df07216e79'
+    const actions: FirebaseActions<IUser> =
+      firebaseDB.getActions<IUser>('users')
+    const data = await actions.getWithFilter()
 
-    await actions.delete(testId)
+    // const data = await actions.getAll()
+
+    console.log(data)
   }
 
   return (

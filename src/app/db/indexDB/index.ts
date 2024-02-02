@@ -1,8 +1,9 @@
 import { IDBPDatabase, openDB, StoreNames } from 'idb'
 import { v4 as uuidv4 } from 'uuid'
+
 // *INFO: internal modules
+import { IndexDBActions, TAddPayload, TUpdatePayload } from '@/app/interfaces'
 import { IIndexDBSchema } from './schema'
-import { Actions } from '@/app/interfaces'
 
 type Name = StoreNames<IIndexDBSchema>
 
@@ -28,7 +29,7 @@ class IndexDB {
     })
   }
 
-  public getActions<T = any>(storeName: Name): Actions<T> {
+  public getActions<T = any>(storeName: Name): IndexDBActions<T> {
     return {
       getAll: () => this._getAll<T>(storeName),
       getWithFilter: (
@@ -36,8 +37,8 @@ class IndexDB {
         sort?: (a: T, b: T) => number,
       ) => this._getWithFilter<T>(storeName, filter, sort),
       getDetails: (key: string) => this._getDetails<T>(storeName, key),
-      add: (payload: Omit<T, 'id'>) => this._add<T>(storeName, payload),
-      update: (key: string, value: Partial<Omit<T, 'id'>>) =>
+      add: (payload: TAddPayload<T>) => this._add<T>(storeName, payload),
+      update: (key: string, value: TUpdatePayload<T>) =>
         this._update<T>(storeName, key, value),
       delete: (key: string) => this._delete(storeName, key),
       clearStore: () => this._clearStore(storeName),
@@ -67,7 +68,7 @@ class IndexDB {
 
   private async _add<T = any>(
     storeName: Name,
-    value: Omit<T, 'id'>,
+    value: TAddPayload<T>,
   ): Promise<string | undefined> {
     const newId = uuidv4()
 
@@ -83,7 +84,7 @@ class IndexDB {
   private async _update<T = any>(
     storeName: Name,
     key: string,
-    value: Partial<Omit<T, 'id'>>,
+    value: TUpdatePayload<T>,
   ): Promise<void> {
     const details = await this._getDetails(storeName, key)
 

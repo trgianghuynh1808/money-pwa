@@ -1,4 +1,3 @@
-import { TAddPayload } from '@/app/interfaces'
 import { initializeApp } from 'firebase/app'
 import {
   collection,
@@ -7,9 +6,15 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  query as queryBuilder,
+  QueryCompositeFilterConstraint,
   setDoc,
+  where,
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
+
+// *INFO: internal muodules
+import { FirebaseActions, TAddPayload, TUpdatePayload } from '@/app/interfaces'
 
 class FirebaseDB {
   private _db: Firestore
@@ -29,19 +34,16 @@ class FirebaseDB {
     this._db = getFirestore(app)
   }
 
-  public getActions<T = any>(collectionName: string): any {
+  public getActions<T = any>(collectionName: string): FirebaseActions<T> {
     return {
       getAll: () => this._getAll<T>(collectionName),
-      // getWithFilter: (
-      //   filter: (value: T) => boolean,
-      //   sort?: (a: T, b: T) => number,
-      // ) => this._getWithFilter<T>(collectionName, filter, sort),
+      getWithFilter: (query?: QueryCompositeFilterConstraint) =>
+        this._getWithFilter<T>(collectionName, query),
       getDetails: (key: string) => this._getDetails<T>(collectionName, key),
-      add: (payload: TAddPayload) => this._add<T>(collectionName, payload),
-      // update: (key: string, value: Partial<Omit<T, 'id'>>) =>
-      //   this._update<T>(collectionName, key, value),
+      add: (payload: TAddPayload<T>) => this._add<T>(collectionName, payload),
+      update: (key: string, value: TUpdatePayload<T>) =>
+        this._update<T>(collectionName, key, value),
       delete: (key: string) => this._delete(collectionName, key),
-      // clearStore: () => this._clearStore(collectionName),
     }
   }
 
@@ -56,7 +58,20 @@ class FirebaseDB {
 
   private async _getAll<T = any>(collectionName: string): Promise<T[]> {
     const docsRef = collection(this._db, collectionName)
-    const querySnapshot = await getDocs(docsRef)
+    // *INFO: fitler with soft delete
+    const q = queryBuilder(docsRef, where('removed', '!=', true))
+    const querySnapshot = await getDocs(q)
+
+    return this._getDataFromSnapshot<T>(querySnapshot)
+  }
+
+  private async _getWithFilter<T = any>(
+    collectionName: string,
+    query?: QueryCompositeFilterConstraint,
+  ): Promise<T[]> {
+    const docsRef = collection(this._db, collectionName)
+    const q = query ? queryBuilder(docsRef, query) : queryBuilder(docsRef)
+    const querySnapshot = await getDocs(q)
 
     return this._getDataFromSnapshot<T>(querySnapshot)
   }
@@ -79,7 +94,7 @@ class FirebaseDB {
   private async _add<T = any>(
     collectionName: string,
     payload: TAddPayload<T>,
-  ): Promise<T> {
+  ): Promise<string | undefined> {
     const docRef = collection(this._db, collectionName)
     const newId = uuidv4()
     const newData = {
@@ -91,12 +106,25 @@ class FirebaseDB {
 
     await setDoc(doc(docRef, newId), newData)
 
-    return newData as T
+    return newData.id
   }
 
-  private _delete(collectionName: string, id: string): void {
+  private async _delete(collectionName: string, id: string): Promise<void> {
     const docRef = doc(this._db, collectionName, id)
-    setDoc(docRef, { removed: true, removed_at: new Date() }, { merge: true })
+    await setDoc(
+      docRef,
+      { removed: true, removed_at: new Date() },
+      { merge: true },
+    )
+  }
+
+  private async _update<T = any>(
+    collectionName: string,
+    id: string,
+    value: Partial<Omit<T, 'id'>>,
+  ): Promise<void> {
+    const docRef = doc(this._db, collectionName, id)
+    await setDoc(docRef, value, { merge: true })
   }
 }
 
