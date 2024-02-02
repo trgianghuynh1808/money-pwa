@@ -45,11 +45,11 @@ class IndexDB {
     }
   }
 
-  private async _getAll<T = any>(storeName: Name): Promise<T[]> {
+  private async _getAll<T>(storeName: Name): Promise<T[]> {
     return (await this._db?.getAll(storeName)) as T[]
   }
 
-  private async _getWithFilter<T = any>(
+  private async _getWithFilter<T>(
     storeName: Name,
     filter: (value: T) => boolean,
     sort?: (a: T, b: T) => number,
@@ -62,11 +62,11 @@ class IndexDB {
     return (filtered ?? []).sort(sort)
   }
 
-  private async _getDetails<T = any>(storeName: Name, key: string): Promise<T> {
+  private async _getDetails<T>(storeName: Name, key: string): Promise<T> {
     return (await this._db?.get(storeName, key)) as T
   }
 
-  private async _add<T = any>(
+  private async _add<T>(
     storeName: Name,
     value: TAddPayload<T>,
   ): Promise<string | undefined> {
@@ -81,7 +81,7 @@ class IndexDB {
     } as any)
   }
 
-  private async _update<T = any>(
+  private async _update<T>(
     storeName: Name,
     key: string,
     value: TUpdatePayload<T>,
@@ -94,7 +94,7 @@ class IndexDB {
       ...details,
       ...value,
       id: key,
-    })
+    } as any)
   }
 
   private async _delete(storeName: Name, key: string): Promise<void> {

@@ -47,7 +47,7 @@ class FirebaseDB {
     }
   }
 
-  private _getDataFromSnapshot<T = any>(snapshot: any): T[] {
+  private _getDataFromSnapshot<T>(snapshot: any): T[] {
     return snapshot.docs.map((doc: any) => {
       return {
         id: doc.id,
@@ -56,7 +56,7 @@ class FirebaseDB {
     })
   }
 
-  private async _getAll<T = any>(collectionName: string): Promise<T[]> {
+  private async _getAll<T>(collectionName: string): Promise<T[]> {
     const docsRef = collection(this._db, collectionName)
     // *INFO: fitler with soft delete
     const q = queryBuilder(docsRef, where('removed', '!=', true))
@@ -65,7 +65,7 @@ class FirebaseDB {
     return this._getDataFromSnapshot<T>(querySnapshot)
   }
 
-  private async _getWithFilter<T = any>(
+  private async _getWithFilter<T>(
     collectionName: string,
     query?: QueryCompositeFilterConstraint,
   ): Promise<T[]> {
@@ -76,7 +76,7 @@ class FirebaseDB {
     return this._getDataFromSnapshot<T>(querySnapshot)
   }
 
-  private async _getDetails<T = any>(
+  private async _getDetails<T>(
     collectionName: string,
     id: string,
   ): Promise<T | undefined> {
@@ -91,7 +91,7 @@ class FirebaseDB {
     } as T
   }
 
-  private async _add<T = any>(
+  private async _add<T>(
     collectionName: string,
     payload: TAddPayload<T>,
   ): Promise<string | undefined> {
@@ -118,7 +118,7 @@ class FirebaseDB {
     )
   }
 
-  private async _update<T = any>(
+  private async _update<T>(
     collectionName: string,
     id: string,
     value: Partial<Omit<T, 'id'>>,
