@@ -7,7 +7,7 @@ export interface IPayment extends IBaseEntity {
   category: EPaymentCategory
   synced: boolean
   synced_at?: Date
-  archived: boolean
+  archived?: boolean
   archived_at?: Date
   ref_index_id?: string
 }
