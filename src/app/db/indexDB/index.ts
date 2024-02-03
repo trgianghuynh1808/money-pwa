@@ -19,7 +19,7 @@ class IndexDB {
   }
 
   public async initialize(): Promise<void> {
-    this._db = await openDB<IIndexDBSchema>(this._name, this._version, {
+    const db = await openDB<IIndexDBSchema>(this._name, this._version, {
       upgrade(db) {
         // *INFO: create payments store
         db.createObjectStore('payments', {
@@ -27,6 +27,8 @@ class IndexDB {
         })
       },
     })
+
+    this._db = db
   }
 
   public getActions<T = any>(storeName: Name): IndexDBActions<T> {

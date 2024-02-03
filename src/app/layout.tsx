@@ -18,20 +18,32 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const [mounted, setMounted] = useState(false)
-  const { isOnline } = useInternetStatus()
+  const [isReady, setIsReady] = useState(false)
 
   async function initDB(): Promise<void> {
     await indexDB.initialize()
   }
 
+  async function initializeApp(): Promise<void> {
+    await initDB()
+    setIsReady(true)
+  }
+
   useEffect(() => {
     if (!mounted) {
-      initDB()
+      initializeApp()
       setMounted(true)
     }
   }, [mounted])
 
-  useEffect(() => {}, [isOnline])
+  function LoadingSpiner() {
+    // *TODO: implement loadingSpiner later
+    return (
+      <div>
+        <span>Loading...</span>
+      </div>
+    )
+  }
 
   return (
     <html lang="en">
@@ -40,7 +52,9 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon.png" />
       </head>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <ReduxProvider store={store}>{children}</ReduxProvider>
+        <ReduxProvider store={store}>
+          {!isReady ? <LoadingSpiner /> : <>{children}</>}
+        </ReduxProvider>
       </body>
     </html>
   )

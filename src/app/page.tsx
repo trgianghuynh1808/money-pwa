@@ -1,10 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect } from 'react'
+
+// *INFO: internal modules
+import { EInputMode, EPaymentCategory } from './enums'
 import { useInternetStatus } from './hooks'
 import { useAppDispatch, useAppSelector } from './store'
-import { addPayment } from './store/features/paymentThunk'
-import { EInputMode, EPaymentCategory } from './enums'
+import { addPayment, getAllPayments } from './store/features/paymentThunk'
 
 export default function Home() {
   const { isOnline } = useInternetStatus()
@@ -14,7 +17,6 @@ export default function Home() {
   )
 
   async function onClickAction() {
-    console.log('run action')
     const newPayment = await dispatch(
       addPayment({
         price: 10,
@@ -24,6 +26,14 @@ export default function Home() {
       }),
     )
   }
+
+  useEffect(() => {
+    dispatch(getAllPayments())
+  }, [])
+
+  console.log({
+    paymentsInMonth,
+  })
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

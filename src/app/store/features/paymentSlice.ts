@@ -3,7 +3,7 @@ import type { SerializedError } from '@reduxjs/toolkit'
 
 // *INFO: internal modules
 import { IPayment } from '@/app/interfaces'
-import { addPayment } from './paymentThunk'
+import { addPayment, getAllPayments } from './paymentThunk'
 
 interface IPaymentState {
   paymentsInMonth: IPayment[]
@@ -33,6 +33,9 @@ const paymentSlice = createSlice({
       .addCase(addPayment.rejected, (state, action) => {
         state.loading = false
         state.error = action.error
+      })
+      .addCase(getAllPayments.fulfilled, (state, action) => {
+        state.paymentsInMonth = action.payload
       })
   },
 })
