@@ -94,7 +94,7 @@ class FirebaseDB {
   private async _add<T>(
     collectionName: string,
     payload: TAddPayload<T>,
-  ): Promise<string | undefined> {
+  ): Promise<T | undefined> {
     const docRef = collection(this._db, collectionName)
     const newId = uuidv4()
     const newData = {
@@ -106,7 +106,7 @@ class FirebaseDB {
 
     await setDoc(doc(docRef, newId), newData)
 
-    return newData.id
+    return newData as T
   }
 
   private async _delete(collectionName: string, id: string): Promise<void> {

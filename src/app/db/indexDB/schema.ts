@@ -1,10 +1,11 @@
 import { DBSchema } from 'idb'
+
 // *INFO: internal modules
-import { IUser } from '../../interfaces'
+import { IPayment } from '../../interfaces'
 
 export interface IIndexDBSchema extends DBSchema {
-  users: {
+  payments: {
     key: string
-    value: IUser
+    value: IPayment
   }
 }

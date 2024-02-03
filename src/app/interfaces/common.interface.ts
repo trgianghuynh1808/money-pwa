@@ -7,7 +7,7 @@ export type TUpdatePayload<T = any> = Partial<Omit<T, 'id'>>
 export type BaseActions<T = any> = {
   getAll: () => Promise<T[]>
   getDetails: (key: string) => Promise<T>
-  add: (payload: TAddPayload<T>) => Promise<string | undefined>
+  add: (payload: TAddPayload<T>) => Promise<T | undefined>
   update: (key: string, value: TUpdatePayload<T>) => Promise<void>
   delete: (key: string) => Promise<void>
 }

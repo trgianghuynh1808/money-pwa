@@ -1,31 +1,33 @@
 'use client'
 
 import Link from 'next/link'
-import { firebaseDB } from '@/app/db'
-import { FirebaseActions, IUser } from '@/app/interfaces'
-import { and, where } from 'firebase/firestore'
 import { useInternetStatus } from './hooks'
+import { useAppDispatch, useAppSelector } from './store'
+import { addPayment } from './store/features/paymentThunk'
+import { EInputMode, EPaymentCategory } from './enums'
 
 export default function Home() {
   const { isOnline } = useInternetStatus()
+  const dispatch = useAppDispatch()
+  const { paymentsInMonth, loading, error } = useAppSelector(
+    (state) => state.payments,
+  )
 
   async function onClickAction() {
     console.log('run action')
-    const actions: FirebaseActions<IUser> =
-      firebaseDB.getActions<IUser>('users')
-    const data = await actions.getWithFilter(
-      and(where('username', '!=', 'test')),
+    const newPayment = await dispatch(
+      addPayment({
+        price: 10,
+        mode: EInputMode.BOY,
+        category: EPaymentCategory.PET,
+        synced: false,
+      }),
     )
-
-    // const data = await actions.getAll()
-
-    console.log(data)
   }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div>
-        <p>{isOnline ? 'Online' : 'Offline'} Main page</p>
         <Link href={'/home'}>Home Page</Link>
         <div>
           <button onClick={onClickAction}>action</button>

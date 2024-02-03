@@ -21,8 +21,8 @@ class IndexDB {
   public async initialize(): Promise<void> {
     this._db = await openDB<IIndexDBSchema>(this._name, this._version, {
       upgrade(db) {
-        // *INFO: create users store
-        db.createObjectStore('users', {
+        // *INFO: create payments store
+        db.createObjectStore('payments', {
           keyPath: 'id',
         })
       },
@@ -69,16 +69,23 @@ class IndexDB {
   private async _add<T>(
     storeName: Name,
     value: TAddPayload<T>,
-  ): Promise<string | undefined> {
+  ): Promise<T | undefined> {
     const newId = uuidv4()
-
-    // *INFO: response new id
-    return await this._db?.add(storeName, {
+    const newEnitty = {
       ...value,
       id: newId,
       created_at: new Date(),
       removed: false,
-    } as any)
+    }
+
+    // *INFO: response new id
+    const id = await this._db?.add(storeName, newEnitty as any)
+
+    if (!id) {
+      return undefined
+    }
+
+    return newEnitty as T
   }
 
   private async _update<T>(
