@@ -50,12 +50,7 @@ export default function Home() {
     )
     const syncedAtStorage = localStorage.getItem(SYNCED_AT_STORAGE_KEY)
 
-    if (
-      !syncDurationEnabled ||
-      !syncDurationEnabled ||
-      !durationHours ||
-      !syncedAtStorage
-    ) {
+    if (!syncDurationEnabled || !durationHours || !syncedAtStorage) {
       return true
     }
 
