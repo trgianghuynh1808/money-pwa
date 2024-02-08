@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { where, and } from 'firebase/firestore'
+import dayjs from 'dayjs'
+import { and, where } from 'firebase/firestore'
 
 // *INFO: internal modules
 import { firebaseDB, indexDB } from '@/app/db'
 import { IPayment, TAddPayload } from '@/app/interfaces'
 import { getValidArray, isEmptyArray } from '@/app/utils'
-import dayjs from 'dayjs'
 
 const indexDBActions = indexDB.getActions<IPayment>('payments')
 const firebaseDBActions = firebaseDB.getActions<IPayment>('payments')
@@ -41,7 +41,7 @@ export const syncPaymentsIntoOnlineDB = createAsyncThunk(
 
     if (isEmptyArray(notSyncedPayments)) return
 
-    const addPromises = notSyncedPayments.map((item) => {
+    const addOnlinePaymentPromises = notSyncedPayments.map((item) => {
       const onlinePayment: TAddPayload<IPayment> = {
         ...item,
         synced: true,
@@ -50,8 +50,7 @@ export const syncPaymentsIntoOnlineDB = createAsyncThunk(
       }
       return firebaseDBActions.add(onlinePayment)
     })
-
-    const newOnlinePayments = await Promise.all(addPromises)
+    const newOnlinePayments = await Promise.all(addOnlinePaymentPromises)
 
     const updatePaymentSyncInfoPromises = getValidArray(newOnlinePayments).map(
       (item) => {
@@ -62,7 +61,6 @@ export const syncPaymentsIntoOnlineDB = createAsyncThunk(
         })
       },
     )
-
     await Promise.all(updatePaymentSyncInfoPromises)
   },
 )
@@ -73,17 +71,19 @@ export const syncPaymentsIntoOfflineDB = createAsyncThunk(
     const startInMonthDate = dayjs().startOf('month').toDate()
     const endInMonthDate = dayjs().endOf('month').toDate()
 
-    const currentOfflinePayments = await indexDBActions.getAll()
-    const currentOnlinePayments = await firebaseDBActions.getWithFilter(
-      and(
-        where('created_at', '>=', startInMonthDate),
-        where('created_at', '<=', endInMonthDate),
+    const [currentOfflinePayments, currentOnlinePayments] = await Promise.all([
+      indexDBActions.getAll(),
+      firebaseDBActions.getWithFilter(
+        and(
+          where('created_at', '>=', startInMonthDate),
+          where('created_at', '<=', endInMonthDate),
+        ),
       ),
-    )
+    ])
+
     const offlineRefFirebaseIds = getValidArray(currentOfflinePayments).map(
       (item) => item.ref_firebase_id,
     )
-
     const notSyncedOnlinePayments = getValidArray(currentOnlinePayments).filter(
       (item) => {
         if (!item.ref_index_id) {
