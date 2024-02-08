@@ -86,10 +86,6 @@ export const syncPaymentsIntoOfflineDB = createAsyncThunk(
     )
     const notSyncedOnlinePayments = getValidArray(currentOnlinePayments).filter(
       (item) => {
-        if (!item.ref_index_id) {
-          return false
-        }
-
         return !offlineRefFirebaseIds.includes(item.id)
       },
     )

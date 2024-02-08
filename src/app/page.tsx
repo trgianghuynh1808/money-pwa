@@ -35,6 +35,7 @@ export default function Home() {
   }
 
   async function handleSyncPayments(): Promise<void> {
+    console.log('run sync payment')
     await dispatch(syncPaymentsIntoOnlineDB())
     await dispatch(syncPaymentsIntoOfflineDB())
     //*INFO: save synced_at to storage
@@ -47,10 +48,14 @@ export default function Home() {
     const durationHours = parseInt(
       process.env.NEXT_PUBLIC_SYNC_DURATION_HOURS || '0',
     )
-    const syncedAtStorage =
-      localStorage.getItem(SYNCED_AT_STORAGE_KEY) ?? new Date().toString()
+    const syncedAtStorage = localStorage.getItem(SYNCED_AT_STORAGE_KEY)
 
-    if (!syncDurationEnabled || !syncDurationEnabled || !durationHours) {
+    if (
+      !syncDurationEnabled ||
+      !syncDurationEnabled ||
+      !durationHours ||
+      !syncedAtStorage
+    ) {
       return true
     }
 
