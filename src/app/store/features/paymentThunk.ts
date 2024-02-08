@@ -35,6 +35,8 @@ export const getAllPayments = createAsyncThunk(
 export const syncPaymentsIntoOnlineDB = createAsyncThunk(
   'payments/syncPaymentIntoOnlineDB',
   async (): Promise<void> => {
+    console.log('run sync payment into onlineDb')
+
     const notSyncedPayments = await indexDBActions.getWithFilter((item) => {
       return item.synced === false
     })
@@ -51,6 +53,10 @@ export const syncPaymentsIntoOnlineDB = createAsyncThunk(
       return firebaseDBActions.add(onlinePayment)
     })
     const newOnlinePayments = await Promise.all(addOnlinePaymentPromises)
+
+    console.log({
+      newOnlinePayments,
+    })
 
     const updatePaymentSyncInfoPromises = getValidArray(newOnlinePayments).map(
       (item) => {
@@ -84,11 +90,18 @@ export const syncPaymentsIntoOfflineDB = createAsyncThunk(
     const offlineRefFirebaseIds = getValidArray(currentOfflinePayments).map(
       (item) => item.ref_firebase_id,
     )
+
+    console.log({ offlineRefFirebaseIds })
+
     const notSyncedOnlinePayments = getValidArray(currentOnlinePayments).filter(
       (item) => {
         return !offlineRefFirebaseIds.includes(item.id)
       },
     )
+
+    console.log({
+      notSyncedOnlinePayments,
+    })
 
     const addPromises = notSyncedOnlinePayments.map((item) => {
       return indexDBActions.add({

@@ -35,7 +35,6 @@ export default function Home() {
   }
 
   async function handleSyncPayments(): Promise<void> {
-    console.log('run sync payment')
     await dispatch(syncPaymentsIntoOnlineDB())
     await dispatch(syncPaymentsIntoOfflineDB())
     //*INFO: save synced_at to storage
@@ -72,14 +71,10 @@ export default function Home() {
   }, [isOnline])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <div className="flex flex-col items-center justify-between">
       <div>
         <Link href={'/home'}>Home Page</Link>
-        <div>{JSON.stringify(paymentsInMonth)}</div>
-        <div>
-          <button onClick={onClickAction}>action</button>
-        </div>
       </div>
-    </main>
+    </div>
   )
 }

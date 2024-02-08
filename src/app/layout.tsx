@@ -8,6 +8,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import './globals.css'
 import { indexDB } from '@/app/db'
 import { store } from '@/app/store'
+import { Header, BottomTabNavigator } from './components/layout'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -50,9 +51,16 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon.png" />
       </head>
-      <body className={inter.className} suppressHydrationWarning={true}>
+      <body
+        className={`${inter.className} w-full min-h-screen bg-gray-300 flex justify-center`}
+        suppressHydrationWarning={true}
+      >
         <ReduxProvider store={store}>
-          {!isReady ? <LoadingSpiner /> : <>{children}</>}
+          <main className="w-full md:w-4/5 lg:w-2/5 bg-white rounded shadow-lg flex flex-col justify-between">
+            <Header />
+            {!isReady ? <LoadingSpiner /> : <>{children}</>}
+            <BottomTabNavigator />
+          </main>
         </ReduxProvider>
       </body>
     </html>
