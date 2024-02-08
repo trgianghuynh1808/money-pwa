@@ -8,7 +8,6 @@ import { Provider as ReduxProvider } from 'react-redux'
 import './globals.css'
 import { indexDB } from '@/app/db'
 import { store } from '@/app/store'
-import { useInternetStatus } from '@/app/hooks'
 
 const inter = Inter({ subsets: ['latin'] })
 

@@ -6,7 +6,7 @@ export type TUpdatePayload<T = any> = Partial<Omit<T, 'id'>>
 
 export type BaseActions<T = any> = {
   getAll: () => Promise<T[]>
-  getDetails: (key: string) => Promise<T>
+  getDetails: (key: string) => Promise<T | undefined>
   add: (payload: TAddPayload<T>) => Promise<T | undefined>
   update: (key: string, value: TUpdatePayload<T>) => Promise<void>
   delete: (key: string) => Promise<void>
@@ -20,6 +20,6 @@ export type IndexDBActions<T = any> = BaseActions<T> & {
   clearStore: () => Promise<void>
 }
 
-export type FirebaseActions<T = any> = BaseActions & {
+export type FirebaseActions<T = any> = BaseActions<T> & {
   getWithFilter: (query?: QueryCompositeFilterConstraint) => Promise<T[]>
 }
