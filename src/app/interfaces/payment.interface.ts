@@ -10,4 +10,5 @@ export interface IPayment extends IBaseEntity {
   archived?: boolean
   archived_at?: Date
   ref_index_id?: string
+  ref_firebase_id?: string
 }
