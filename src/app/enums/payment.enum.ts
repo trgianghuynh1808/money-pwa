@@ -1,7 +1,9 @@
 export enum EInputMode {
+  // *INFO: ALL not save into DB and can't input payment
+  ALL = -1,
   BOY = 0,
   GIRL = 1,
-  COUPLE = 2,
+  FAMILY = 2,
 }
 
 export enum EPaymentCategory {

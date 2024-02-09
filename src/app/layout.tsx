@@ -9,6 +9,8 @@ import './globals.css'
 import { indexDB } from '@/app/db'
 import { store } from '@/app/store'
 import { Header, BottomTabNavigator } from './components/layout'
+import { EInputMode } from './enums'
+import { AppContext } from './contexts'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,8 +19,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [mounted, setMounted] = useState(false)
-  const [isReady, setIsReady] = useState(false)
+  const [mounted, setMounted] = useState<boolean>(false)
+  const [isReady, setIsReady] = useState<boolean>(false)
+  const [inputMode, setInputMode] = useState<EInputMode>(EInputMode.GIRL)
 
   async function initDB(): Promise<void> {
     await indexDB.initialize()
@@ -56,11 +59,18 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <ReduxProvider store={store}>
-          <main className="w-full md:w-4/5 lg:w-2/5 bg-white rounded shadow-lg flex flex-col justify-between">
-            <Header />
-            {!isReady ? <LoadingSpiner /> : <>{children}</>}
-            <BottomTabNavigator />
-          </main>
+          <AppContext.Provider
+            value={{
+              inputMode,
+              setInputMode,
+            }}
+          >
+            <main className="w-full md:w-4/5 lg:w-2/5 bg-white rounded shadow-lg flex flex-col justify-between">
+              <Header />
+              {!isReady ? <LoadingSpiner /> : <>{children}</>}
+              <BottomTabNavigator />
+            </main>
+          </AppContext.Provider>
         </ReduxProvider>
       </body>
     </html>

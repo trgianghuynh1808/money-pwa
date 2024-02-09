@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 export function useInternetStatus() {
   const [isOnline, setIsOnline] = useState<boolean>(
-    typeof window !== 'undefined' ? window.navigator.onLine : false,
+    typeof window !== 'undefined' ? window.navigator.onLine : true,
   )
 
   useEffect(() => {
@@ -10,8 +10,12 @@ export function useInternetStatus() {
       setIsOnline(navigator.onLine)
     }
 
-    window.addEventListener('offline', handleChangeStatus)
-    window.addEventListener('online', handleChangeStatus)
+    window.addEventListener('offline', () => {
+      setIsOnline(false)
+    })
+    window.addEventListener('online', () => {
+      setIsOnline(true)
+    })
 
     // *INFO: clean up to avoid memory-leak
     return () => {
