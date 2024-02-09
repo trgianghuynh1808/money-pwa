@@ -14,7 +14,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 
 // *INFO: internal muodules
-import { FirebaseActions, TAddPayload, TUpdatePayload } from '@/app/interfaces'
+import { FirebaseActions, TAddPayload, TUpdatePayload } from '@/interfaces'
 
 class FirebaseDB {
   private _db: Firestore

@@ -1,5 +1,5 @@
 import { IBaseEntity } from './base.interface'
-import { EInputMode, EPaymentCategory } from '@/app/enums'
+import { EInputMode, EPaymentCategory } from '@/enums'
 
 export interface IPayment extends IBaseEntity {
   price: number

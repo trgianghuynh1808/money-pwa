@@ -1,7 +1,7 @@
 import { DBSchema } from 'idb'
 
 // *INFO: internal modules
-import { IPayment } from '../../interfaces'
+import { IPayment } from '@/interfaces'
 
 export interface IIndexDBSchema extends DBSchema {
   payments: {

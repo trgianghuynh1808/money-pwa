@@ -2,7 +2,7 @@ import { IDBPDatabase, openDB, StoreNames } from 'idb'
 import { v4 as uuidv4 } from 'uuid'
 
 // *INFO: internal modules
-import { IndexDBActions, TAddPayload, TUpdatePayload } from '@/app/interfaces'
+import { IndexDBActions, TAddPayload, TUpdatePayload } from '@/interfaces'
 import { IIndexDBSchema } from './schema'
 
 type Name = StoreNames<IIndexDBSchema>
