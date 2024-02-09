@@ -14,6 +14,7 @@ import {
   syncPaymentsIntoOnlineDB,
 } from '@/store/features/payments/paymentThunk'
 import { sleep } from '@/utils'
+import { PaymentForm } from '@/components/pages/home'
 
 export default function Home() {
   const dispatch = useAppDispatch()
@@ -63,7 +64,8 @@ export default function Home() {
       }),
     )
 
-    await sleep(1000)
+    // *INFO: delay for handle sync payments
+    await sleep(500)
     handleAfterAddPayment()
   }
 
@@ -72,8 +74,9 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-between">
-      <div>
+    <div className="flex-1 p-3">
+      <PaymentForm />
+      <div className="mt-4">
         <span>Home Page</span>
         {/* <button onClick={onClickAction}>Add</button> */}
       </div>
