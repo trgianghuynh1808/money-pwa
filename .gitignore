@@ -37,3 +37,7 @@ next-env.d.ts
 
 # IDE
 .idea/*
+
+**/public/workbox-*.js
+**/public/sw.js
+**/public/fallback-*.js
