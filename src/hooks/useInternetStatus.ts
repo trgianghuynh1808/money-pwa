@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 export function useInternetStatus() {
-  const [isOnline, setIsOnline] = useState<boolean>(false)
+  const [isOnline, setIsOnline] = useState<boolean>(window?.navigator?.onLine)
 
   useEffect(() => {
     window.addEventListener('offline', () => {
