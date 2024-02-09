@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 export function useInternetStatus() {
   const [isOnline, setIsOnline] = useState<boolean>(
-    typeof window !== 'undefined' ? window.navigator.onLine : true,
+    typeof window !== 'undefined' ? window.navigator.onLine : false,
   )
 
   useEffect(() => {
