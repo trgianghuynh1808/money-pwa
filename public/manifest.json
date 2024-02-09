@@ -1,6 +1,8 @@
 {
-  "name": "Next PWA demo",
-  "short_name": "Mext PWA",
+  "name": "Ting Ting",
+  "version": "1.0",
+  "manifest_version": 2,
+  "short_name": "TingTing",
   "icons": [
     {
       "src": "/icon.png",
