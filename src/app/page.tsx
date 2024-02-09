@@ -1,7 +1,6 @@
 'use client'
 
 import dayjs from 'dayjs'
-import Link from 'next/link'
 import { useEffect } from 'react'
 
 // *INFO: internal modules
@@ -73,7 +72,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-between">
       <div>
-        <Link href={'/home'}>Home Page</Link>
+        <span>Home Page</span>
       </div>
     </div>
   )
