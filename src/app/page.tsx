@@ -75,7 +75,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-between">
       <div>
         <span>Home Page</span>
-        <button onClick={onClickAction}>Add</button>
+        {/* <button onClick={onClickAction}>Add</button> */}
       </div>
     </div>
   )
