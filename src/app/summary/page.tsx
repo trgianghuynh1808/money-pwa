@@ -1,7 +1,7 @@
-export default function Home() {
+export default function SummaryPage() {
   return (
     <div className="flex flex-col items-center justify-between">
-      <h1>home page</h1>
+      <h1>Summary page</h1>
     </div>
   )
 }

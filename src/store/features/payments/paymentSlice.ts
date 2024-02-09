@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { SerializedError } from '@reduxjs/toolkit'
 
 // *INFO: internal modules
-import { IPayment } from '@/app/interfaces'
+import { IPayment } from '@/interfaces'
 import {
   addPayment,
   getAllPayments,

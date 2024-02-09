@@ -1,9 +1,11 @@
-import { AppContext } from '@/app/contexts'
-import { EInputMode } from '@/app/enums'
-import { useInternetStatus } from '@/app/hooks'
 import { Menu, Transition } from '@headlessui/react'
 import Image from 'next/image'
-import { Fragment, useContext, useEffect } from 'react'
+import { Fragment, useContext } from 'react'
+
+// *INFO: internal modules
+import { AppContext } from '@/contexts'
+import { EInputMode } from '@/enums'
+import { useInternetStatus } from '@/hooks'
 
 const avatarMap = {
   GIRL: '/images/girl.webp',
@@ -41,7 +43,7 @@ export default function AvatarDropdown() {
   }
 
   return (
-    <div className="w-56 text-right">
+    <div className="text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button>

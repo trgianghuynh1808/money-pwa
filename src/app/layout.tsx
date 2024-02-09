@@ -6,11 +6,11 @@ import { Provider as ReduxProvider } from 'react-redux'
 
 // *INFO: internal modules
 import './globals.css'
-import { indexDB } from '@/app/db'
-import { store } from '@/app/store'
-import { Header, BottomTabNavigator } from './components/layout'
-import { EInputMode } from './enums'
-import { AppContext } from './contexts'
+import { indexDB } from '@/db'
+import { store } from '@/store'
+import { Header, BottomTabNavigator } from '@/components/layout'
+import { EInputMode } from '@/enums'
+import { AppContext } from '@/contexts'
 
 const inter = Inter({ subsets: ['latin'] })
 

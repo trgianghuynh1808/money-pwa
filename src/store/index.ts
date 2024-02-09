@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 // *INFO: internal modules
-import { paymentReducer } from './features/paymentSlice'
+import { paymentReducer } from './features/payments/paymentSlice'
 
 export const store = configureStore({
   reducer: {

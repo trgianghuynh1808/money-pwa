@@ -5,16 +5,16 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 
 // *INFO: internal modules
-import { SYNCED_AT_STORAGE_KEY } from './constants'
-import { EInputMode, EPaymentCategory } from './enums'
-import { useInternetStatus } from './hooks'
-import { useAppDispatch, useAppSelector } from './store'
+import { SYNCED_AT_STORAGE_KEY } from '@/constants'
+import { EInputMode, EPaymentCategory } from '@/enums'
+import { useInternetStatus } from '@/hooks'
+import { useAppDispatch, useAppSelector } from '@/store'
 import {
   addPayment,
   getAllPayments,
   syncPaymentsIntoOfflineDB,
   syncPaymentsIntoOnlineDB,
-} from './store/features/paymentThunk'
+} from '@/store/features/payments/paymentThunk'
 
 export default function Home() {
   const { isOnline } = useInternetStatus()

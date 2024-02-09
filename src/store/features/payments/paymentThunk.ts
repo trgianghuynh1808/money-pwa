@@ -3,9 +3,9 @@ import dayjs from 'dayjs'
 import { and, where } from 'firebase/firestore'
 
 // *INFO: internal modules
-import { firebaseDB, indexDB } from '@/app/db'
-import { IPayment, TAddPayload } from '@/app/interfaces'
-import { getValidArray, isEmptyArray } from '@/app/utils'
+import { firebaseDB, indexDB } from '@/db'
+import { IPayment, TAddPayload } from '@/interfaces'
+import { getValidArray, isEmptyArray } from '@/utils'
 
 const indexDBActions = indexDB.getActions<IPayment>('payments')
 const firebaseDBActions = firebaseDB.getActions<IPayment>('payments')
@@ -35,15 +35,15 @@ export const getAllPayments = createAsyncThunk(
 export const syncPaymentsIntoOnlineDB = createAsyncThunk(
   'payments/syncPaymentIntoOnlineDB',
   async (): Promise<void> => {
-    console.log('run sync payment into onlineDb')
-
-    const notSyncedPayments = await indexDBActions.getWithFilter((item) => {
-      return item.synced === false
-    })
+    const notSyncedPayments = await indexDBActions.getWithFilter(
+      (item: IPayment) => {
+        return item.synced === false
+      },
+    )
 
     if (isEmptyArray(notSyncedPayments)) return
 
-    const addOnlinePaymentPromises = notSyncedPayments.map((item) => {
+    const addOnlinePaymentPromises = notSyncedPayments.map((item: IPayment) => {
       const onlinePayment: TAddPayload<IPayment> = {
         ...item,
         synced: true,
@@ -53,10 +53,6 @@ export const syncPaymentsIntoOnlineDB = createAsyncThunk(
       return firebaseDBActions.add(onlinePayment)
     })
     const newOnlinePayments = await Promise.all(addOnlinePaymentPromises)
-
-    console.log({
-      newOnlinePayments,
-    })
 
     const updatePaymentSyncInfoPromises = getValidArray(newOnlinePayments).map(
       (item) => {
@@ -91,17 +87,11 @@ export const syncPaymentsIntoOfflineDB = createAsyncThunk(
       (item) => item.ref_firebase_id,
     )
 
-    console.log({ offlineRefFirebaseIds })
-
     const notSyncedOnlinePayments = getValidArray(currentOnlinePayments).filter(
       (item) => {
         return !offlineRefFirebaseIds.includes(item.id)
       },
     )
-
-    console.log({
-      notSyncedOnlinePayments,
-    })
 
     const addPromises = notSyncedOnlinePayments.map((item) => {
       return indexDBActions.add({
