@@ -6,7 +6,6 @@ import { useEffect } from 'react'
 // *INFO: internal modules
 import { SYNCED_AT_STORAGE_KEY } from '@/constants'
 import { EInputMode, EPaymentCategory } from '@/enums'
-import { useInternetStatus } from '@/hooks'
 import { useAppDispatch, useAppSelector } from '@/store'
 import {
   addPayment,
@@ -14,23 +13,20 @@ import {
   syncPaymentsIntoOfflineDB,
   syncPaymentsIntoOnlineDB,
 } from '@/store/features/payments/paymentThunk'
+import { sleep } from '@/utils'
 
 export default function Home() {
-  const { isOnline } = useInternetStatus()
   const dispatch = useAppDispatch()
   const { paymentsInMonth, loading, error, fetching } = useAppSelector(
     (state) => state.payments,
   )
 
-  async function onClickAction() {
-    const newPayment = await dispatch(
-      addPayment({
-        price: 10,
-        mode: EInputMode.BOY,
-        category: EPaymentCategory.PET,
-        synced: false,
-      }),
-    )
+  function handleAfterAddPayment(): void {
+    const isSyncExpired = checkExpiredSyncDuration()
+
+    if (window.navigator.onLine && isSyncExpired) {
+      handleSyncPayments()
+    }
   }
 
   async function handleSyncPayments(): Promise<void> {
@@ -57,22 +53,29 @@ export default function Home() {
     return expireAt.isBefore(dayjs())
   }
 
+  async function onClickAction() {
+    const newPayment = await dispatch(
+      addPayment({
+        price: 10,
+        mode: EInputMode.BOY,
+        category: EPaymentCategory.PET,
+        synced: false,
+      }),
+    )
+
+    await sleep(1000)
+    handleAfterAddPayment()
+  }
+
   useEffect(() => {
     dispatch(getAllPayments())
   }, [])
-
-  useEffect(() => {
-    const isSyncExpired = checkExpiredSyncDuration()
-
-    if (isOnline && isSyncExpired) {
-      handleSyncPayments()
-    }
-  }, [isOnline])
 
   return (
     <div className="flex flex-col items-center justify-between">
       <div>
         <span>Home Page</span>
+        <button onClick={onClickAction}>Add</button>
       </div>
     </div>
   )

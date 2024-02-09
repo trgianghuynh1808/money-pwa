@@ -9,3 +9,7 @@ export function getValidArray<T = any>(array?: T[]): T[] {
 export function isEmptyArray<T = any>(array?: T[]): boolean {
   return getValidArray<T>(array).length === 0
 }
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}

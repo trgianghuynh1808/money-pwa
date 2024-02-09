@@ -5,7 +5,6 @@ import { Fragment, useContext } from 'react'
 // *INFO: internal modules
 import { AppContext } from '@/contexts'
 import { EInputMode } from '@/enums'
-import { useInternetStatus } from '@/hooks'
 
 const avatarMap = {
   GIRL: '/images/girl.webp',
@@ -33,7 +32,6 @@ const INPUT_OPTIONS = [
 ]
 export default function AvatarDropdown() {
   const { inputMode, setInputMode } = useContext(AppContext)
-  const { isOnline } = useInternetStatus()
 
   function getAvatarSrc(currentInputMode: EInputMode): string {
     return (
@@ -55,9 +53,6 @@ export default function AvatarDropdown() {
                 height={20}
                 alt="avatar"
               />
-              <span
-                className={`w-4 h-4 rounded-full ${isOnline ? 'bg-green-500' : 'bg-gray-500'} border-2 border-white absolute bottom-0.5 right-0.5`}
-              ></span>
             </div>
           </Menu.Button>
         </div>

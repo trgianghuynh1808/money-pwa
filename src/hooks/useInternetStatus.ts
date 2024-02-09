@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 export function useInternetStatus() {
-  const [isMounted, setIsMounted] = useState<boolean>(false)
   const [isOnline, setIsOnline] = useState<boolean>(
     typeof window !== 'undefined' ? window.navigator.onLine : false,
   )
@@ -24,14 +23,6 @@ export function useInternetStatus() {
       window.removeEventListener('offline', handleChangeStatus)
     }
   }, [])
-
-  useEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true)
-    } else {
-      setIsOnline(navigator.onLine)
-    }
-  }, [isMounted])
 
   return { isOnline }
 }
