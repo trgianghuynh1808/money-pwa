@@ -2,7 +2,7 @@ const withPWA = require('@ducanh2912/next-pwa').default({
   cacheOnFrontEndNav: true,
   cacheStartUrl: true,
   aggressiveFrontEndNavCaching: true,
-  reloadOnOnline: true,
+  reloadOnOnline: false,
   swcMinify: true,
   dest: 'public',
   fallbacks: {
