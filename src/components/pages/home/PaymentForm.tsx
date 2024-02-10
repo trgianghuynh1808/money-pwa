@@ -1,14 +1,43 @@
+import { useState } from 'react'
+
+// *INFO: internal modules
 import CategoryLightBox from './CategoryLightBox'
+import { CATEGORY_OPTIONS } from './constants'
+import AddPaymentModal from './AddPaymentModal'
 
 export default function PaymentForm() {
+  const [isOpenAddPaymentModal, setIsOpenAddPaymentModal] =
+    useState<boolean>(false)
+  const [paymentCategoryOption, setPaymentCategoryOption] = useState(
+    CATEGORY_OPTIONS[0],
+  )
+  const [price, setPrice] = useState<string>('')
+
   function onClickAddBtn(): void {
-    prompt('Nhập: ')
+    setIsOpenAddPaymentModal(true)
+  }
+
+  function handleSubmitForm(): void {
+    console.log({ price })
+    setPrice('')
   }
 
   return (
     <div className="grid grid-cols-4 gap-4 ">
+      <AddPaymentModal
+        isOpen={isOpenAddPaymentModal}
+        setIsOpen={setIsOpenAddPaymentModal}
+        price={price}
+        setPrice={setPrice}
+        handleOnSubmit={handleSubmitForm}
+      />
+
       <div className="col-span-3">
-        <CategoryLightBox />
+        <CategoryLightBox
+          options={CATEGORY_OPTIONS}
+          selectedOption={paymentCategoryOption}
+          setSelectedOption={setPaymentCategoryOption}
+        />
       </div>
       <div className="col-span-1">
         <button

@@ -23,3 +23,9 @@ export type IndexDBActions<T = any> = BaseActions<T> & {
 export type FirebaseActions<T = any> = BaseActions<T> & {
   getWithFilter: (query?: QueryCompositeFilterConstraint) => Promise<T[]>
 }
+
+export interface IOption {
+  label: string
+  value: number
+  iconSrc?: string
+}
