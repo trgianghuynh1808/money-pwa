@@ -65,7 +65,7 @@ export default function RootLayout({
               setInputMode,
             }}
           >
-            <main className="w-full md:w-4/5 lg:w-2/5 bg-white rounded shadow-lg flex flex-col justify-between">
+            <main className="w-full md:w-3/5 lg:w-1/5 bg-white rounded shadow-lg flex flex-col justify-between">
               <Header />
               {!isReady ? <LoadingSpiner /> : <>{children}</>}
               <BottomTabNavigator />

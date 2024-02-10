@@ -53,7 +53,7 @@ export default function AddPaymentModal(
                 <form onSubmit={onSubmit}>
                   <div className="relative">
                     <p className="text-sm text-gray-500">
-                      Lần này là bao nhiều xèn đấy?
+                      Lần này là bao nhiêu xèn đấy?
                     </p>
                     <input
                       className="mt-2 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
