@@ -24,7 +24,7 @@ export const CATEGORY_OPTIONS: IOption[] = [
     iconSrc: CATEGORY_ICON_MAP.SHOPPING,
   },
   {
-    label: 'Thú Cưng',
+    label: 'Bông',
     value: EPaymentCategory.PET,
     iconSrc: CATEGORY_ICON_MAP.PET,
   },
