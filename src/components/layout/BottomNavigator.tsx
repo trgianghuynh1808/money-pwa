@@ -33,6 +33,9 @@ export default function BottomTabNavigator() {
           <span className="tab tab-kategori block text-md">Danh sách</span>
         </Link>
       </div>
+      <p className="text-right w-full text-xs text-white absolute bottom-0">
+        1.0.2
+      </p>
     </section>
   )
 }
