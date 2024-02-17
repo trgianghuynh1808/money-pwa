@@ -33,8 +33,8 @@ export default function PaymentList() {
 
   return (
     <div
-      className="flex flex-col gap-2 overflow-y-auto items-center"
-      style={{ height: '64vh' }}
+      className="flex flex-col gap-2 overflow-y-auto items-center py-2"
+      style={{ maxHeight: '60vh' }}
     >
       {isEmptyArray(filteredPayments) ? (
         <p className="text-xl">Chưa tiêu xèn nào ^^</p>

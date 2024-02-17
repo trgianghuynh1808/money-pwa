@@ -13,7 +13,10 @@ export default function BottomTabNavigator() {
   }
 
   return (
-    <section id="bottom-navigation" className="w-full bg-violet-600 shadow">
+    <section
+      id="bottom-navigation"
+      className="w-full bg-violet-600 shadow fixed bottom-0"
+    >
       <div id="tabs" className="flex justify-between">
         <Link
           href={routes.home.value}
