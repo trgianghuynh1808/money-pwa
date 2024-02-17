@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import DatePicker, { DateValueType } from 'react-tailwindcss-datepicker'
 
 // *INFO: internal modules
@@ -26,6 +26,8 @@ export default function PaymentForm() {
   const [isOpenAddPaymentModal, setIsOpenAddPaymentModal] =
     useState<boolean>(false)
 
+  const [isMounted, setIsMounted] = useState<boolean>(false)
+
   const isValidDate = useMemo(() => {
     return Boolean(pickDate?.startDate) && Boolean(pickDate?.endDate)
   }, [pickDate])
@@ -51,6 +53,18 @@ export default function PaymentForm() {
   function onChangePicker(newValue: DateValueType): void {
     setPickDate(newValue)
   }
+
+  useEffect(() => {
+    if (isMounted) {
+      setIsOpenAddPaymentModal(true)
+    }
+  }, [paymentCategoryOption])
+
+  useEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true)
+    }
+  }, [isMounted])
 
   return (
     <div className="grid grid-cols-4 gap-4 ">

@@ -62,17 +62,19 @@ export default function AddPaymentModal(
                     <p className="text-sm text-gray-500">
                       Lần này là bao nhiêu xèn đấy?
                     </p>
-                    <input
-                      className="mt-2 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                      id="inline-full-name"
-                      type="tel"
-                      placeholder="Ghi vô nào"
-                      autoFocus
-                      value={price}
-                      onChange={(event) =>
-                        setPrice(event.target.value.replace(/[^0-9]/g, ''))
-                      }
-                    />
+                    {isOpen && (
+                      <input
+                        className="mt-2 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                        id="inline-full-name"
+                        type="tel"
+                        placeholder="Ghi vô nào"
+                        autoFocus
+                        value={price}
+                        onChange={(event) =>
+                          setPrice(event.target.value.replace(/[^0-9]/g, ''))
+                        }
+                      />
+                    )}
                     <span className="absolute right-2 bottom-2.5 text-sm text-gray-500">
                       ({PRICE_UNIT})
                     </span>
