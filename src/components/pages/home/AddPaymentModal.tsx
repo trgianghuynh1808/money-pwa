@@ -1,18 +1,25 @@
-import { Dispatch, FormEvent, Fragment, SetStateAction, useState } from 'react'
+import {
+  Dispatch,
+  FormEvent,
+  Fragment,
+  SetStateAction,
+  useContext,
+} from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { PaymentFormContext } from './paymentForm.context'
+import { PRICE_UNIT } from '@/constants'
 
 interface IAddPaymentModalProps {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
-  price: string
-  setPrice: Dispatch<SetStateAction<string>>
   handleOnSubmit: () => void
 }
 
 export default function AddPaymentModal(
   props: Readonly<IAddPaymentModalProps>,
 ) {
-  const { isOpen, setIsOpen, price, setPrice, handleOnSubmit } = props
+  const { isOpen, setIsOpen, handleOnSubmit } = props
+  const { price, setPrice } = useContext(PaymentFormContext)
 
   function closeModal(): void {
     setIsOpen(false)
@@ -67,15 +74,16 @@ export default function AddPaymentModal(
                       }
                     />
                     <span className="absolute right-2 bottom-2.5 text-sm text-gray-500">
-                      (K)
+                      ({PRICE_UNIT})
                     </span>
                   </div>
 
                   <div className="mt-4">
                     <button
                       type="submit"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 w-full py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 w-full py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-30"
                       onClick={closeModal}
+                      disabled={!price}
                     >
                       Okay
                     </button>

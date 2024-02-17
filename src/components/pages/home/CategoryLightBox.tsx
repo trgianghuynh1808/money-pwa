@@ -1,7 +1,7 @@
-import { Dispatch, Fragment, SetStateAction, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
+import { Dispatch, Fragment, SetStateAction } from 'react'
 
 //*INFO: internal modules
 import { IOption } from '@/interfaces'
@@ -29,7 +29,7 @@ export default function CategoryLightBox(
                 src={selectedOption.iconSrc ?? ''}
                 width={6}
                 height={6}
-                alt="icon"
+                alt={selectedOption.label}
               />
               <span className="block truncate">{selectedOption.label}</span>
             </div>

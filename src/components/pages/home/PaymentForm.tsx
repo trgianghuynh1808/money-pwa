@@ -1,23 +1,31 @@
-import { useMemo, useState } from 'react'
-import DatePicker, { DateValueType } from 'react-tailwindcss-datepicker'
 import dayjs from 'dayjs'
+import { useContext, useMemo, useState } from 'react'
+import DatePicker, { DateValueType } from 'react-tailwindcss-datepicker'
 
 // *INFO: internal modules
+import { AppContext } from '@/contexts'
+import { useAppDispatch } from '@/store'
+import { addPayment } from '@/store/features/payments/paymentThunk'
+import AddPaymentModal from './AddPaymentModal'
 import CategoryLightBox from './CategoryLightBox'
 import { CATEGORY_OPTIONS } from './constants'
-import AddPaymentModal from './AddPaymentModal'
+import { PaymentFormContext } from './paymentForm.context'
+import { EInputMode } from '@/enums'
 
 export default function PaymentForm() {
+  const dispatch = useAppDispatch()
+  const { inputMode } = useContext(AppContext)
+  const {
+    pickDate,
+    price,
+    paymentCategoryOption,
+    setPaymentCategoryOption,
+    setPrice,
+    setPickDate,
+  } = useContext(PaymentFormContext)
   const [isOpenAddPaymentModal, setIsOpenAddPaymentModal] =
     useState<boolean>(false)
-  const [paymentCategoryOption, setPaymentCategoryOption] = useState(
-    CATEGORY_OPTIONS[0],
-  )
-  const [price, setPrice] = useState<string>('')
-  const [pickDate, setPickDate] = useState<DateValueType>({
-    startDate: new Date(),
-    endDate: new Date(),
-  })
+
   const isValidDate = useMemo(() => {
     return Boolean(pickDate?.startDate) && Boolean(pickDate?.endDate)
   }, [pickDate])
@@ -26,7 +34,17 @@ export default function PaymentForm() {
     setIsOpenAddPaymentModal(true)
   }
 
-  function handleSubmitForm(): void {
+  async function handleSubmitForm(): Promise<void> {
+    const payload = {
+      price: parseInt(price),
+      mode: inputMode,
+      category: paymentCategoryOption.value,
+      synced: false,
+      payment_at: pickDate?.startDate as Date,
+    }
+
+    await dispatch(addPayment(payload))
+
     setPrice('')
   }
 
@@ -39,8 +57,6 @@ export default function PaymentForm() {
       <AddPaymentModal
         isOpen={isOpenAddPaymentModal}
         setIsOpen={setIsOpenAddPaymentModal}
-        price={price}
-        setPrice={setPrice}
         handleOnSubmit={handleSubmitForm}
       />
 
@@ -50,6 +66,7 @@ export default function PaymentForm() {
           containerClassName="relative w-full cursor-default rounded-lg shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
           useRange={false}
           asSingle={true}
+          readOnly={true}
           displayFormat={'DD/MM/YYYY'}
           minDate={dayjs().startOf('month').toDate()}
           maxDate={dayjs().toDate()}
@@ -68,7 +85,7 @@ export default function PaymentForm() {
       <div className="col-span-2">
         <button
           className="inline-flex items-center justify-center w-full h-10 text-base font-medium text-center text-indigo-100 border border-indigo-500 rounded-lg shadow-sm cursor-pointer hover:text-white bg-gradient-to-br from-purple-500 via-indigo-500 to-indigo-500 disabled:opacity-30"
-          disabled={!isValidDate}
+          disabled={!isValidDate || inputMode === EInputMode.ALL}
           onClick={onClickAddBtn}
         >
           <span className="relative">Thêm</span>

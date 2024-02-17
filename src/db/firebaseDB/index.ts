@@ -97,10 +97,13 @@ class FirebaseDB {
   ): Promise<T | undefined> {
     const docRef = collection(this._db, collectionName)
     const newId = uuidv4()
+    const now = new Date()
+
     const newData = {
       ...payload,
       id: newId,
-      created_at: new Date(),
+      created_at: now,
+      updated_at: now,
       removed: false,
     }
 

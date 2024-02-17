@@ -1,26 +1,31 @@
 'use client'
 
 import dayjs from 'dayjs'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { DateValueType } from 'react-tailwindcss-datepicker'
 
 // *INFO: internal modules
+import { PaymentForm, PaymentList } from '@/components/pages/home'
+import { CATEGORY_OPTIONS } from '@/components/pages/home/constants'
+import { PaymentFormContext } from '@/components/pages/home/paymentForm.context'
 import { SYNCED_AT_STORAGE_KEY } from '@/constants'
-import { EInputMode, EPaymentCategory } from '@/enums'
-import { useAppDispatch, useAppSelector } from '@/store'
+import { useAppDispatch } from '@/store'
 import {
-  addPayment,
   getAllPayments,
   syncPaymentsIntoOfflineDB,
   syncPaymentsIntoOnlineDB,
 } from '@/store/features/payments/paymentThunk'
-import { sleep } from '@/utils'
-import { PaymentForm } from '@/components/pages/home'
 
 export default function Home() {
   const dispatch = useAppDispatch()
-  const { paymentsInMonth, loading, error, fetching } = useAppSelector(
-    (state) => state.payments,
+  const [paymentCategoryOption, setPaymentCategoryOption] = useState(
+    CATEGORY_OPTIONS[0],
   )
+  const [price, setPrice] = useState<string>('')
+  const [pickDate, setPickDate] = useState<DateValueType>({
+    startDate: new Date(),
+    endDate: new Date(),
+  })
 
   function handleAfterAddPayment(): void {
     const isSyncExpired = checkExpiredSyncDuration()
@@ -54,32 +59,27 @@ export default function Home() {
     return expireAt.isBefore(dayjs())
   }
 
-  async function onClickAction() {
-    const newPayment = await dispatch(
-      addPayment({
-        price: 10,
-        mode: EInputMode.BOY,
-        category: EPaymentCategory.PET,
-        synced: false,
-      }),
-    )
-
-    // *INFO: delay for handle sync payments
-    await sleep(500)
-    handleAfterAddPayment()
-  }
-
   useEffect(() => {
     dispatch(getAllPayments())
   }, [])
 
   return (
-    <div className="flex-1 p-3">
-      <PaymentForm />
-      <div className="mt-4">
-        <span>Home Page</span>
-        {/* <button onClick={onClickAction}>Add</button> */}
+    <PaymentFormContext.Provider
+      value={{
+        paymentCategoryOption,
+        setPaymentCategoryOption,
+        price,
+        setPrice,
+        pickDate,
+        setPickDate,
+      }}
+    >
+      <div className="flex-1 p-3">
+        <PaymentForm />
+        <div className="mt-4">
+          <PaymentList />
+        </div>
       </div>
-    </div>
+    </PaymentFormContext.Provider>
   )
 }

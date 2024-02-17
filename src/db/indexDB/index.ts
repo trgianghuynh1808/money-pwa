@@ -73,10 +73,13 @@ class IndexDB {
     value: TAddPayload<T>,
   ): Promise<T | undefined> {
     const newId = uuidv4()
+    const now = new Date()
+
     const newEnitty = {
       ...value,
       id: newId,
-      created_at: new Date(),
+      created_at: now,
+      updated_at: now,
       removed: false,
     }
 
@@ -102,6 +105,7 @@ class IndexDB {
     await this._db?.put(storeName, {
       ...details,
       ...value,
+      updated_at: new Date(),
       id: key,
     } as any)
   }
