@@ -2,12 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { SerializedError } from '@reduxjs/toolkit'
 
 // *INFO: internal modules
-import { IPayment } from '@/interfaces'
+import { IPayment } from '@//interfaces'
 import {
   addPayment,
+  editPayment,
   getAllPayments,
   syncPaymentsIntoOfflineDB,
 } from './paymentThunk'
+import { getValidArray } from '@/utils'
 
 interface IPaymentState {
   paymentsInMonth: IPayment[]
@@ -39,6 +41,26 @@ const paymentSlice = createSlice({
       .addCase(addPayment.rejected, (state, action) => {
         state.loading = false
         state.error = action.error
+      })
+      .addCase(editPayment.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(editPayment.fulfilled, (state, action) => {
+        const { key, payload } = action.payload
+
+        state.loading = false
+
+        const currentPaymentIndex = getValidArray(
+          state.paymentsInMonth,
+        ).findIndex((item) => item.id === key)
+
+        state.paymentsInMonth[currentPaymentIndex] = {
+          ...state.paymentsInMonth[currentPaymentIndex],
+          ...payload,
+        }
+      })
+      .addCase(editPayment.rejected, (state) => {
+        state.loading = false
       })
       .addCase(getAllPayments.fulfilled, (state, action) => {
         state.paymentsInMonth = action.payload

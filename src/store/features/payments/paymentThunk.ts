@@ -4,7 +4,7 @@ import { and, where } from 'firebase/firestore'
 
 // *INFO: internal modules
 import { firebaseDB, indexDB } from '@/db'
-import { IPayment, TAddPayload } from '@/interfaces'
+import { IPayment, TAddPayload, TUpdatePayload } from '@/interfaces'
 import { getValidArray, isEmptyArray } from '@/utils'
 
 const indexDBActions = indexDB.getActions<IPayment>('payments')
@@ -23,6 +23,23 @@ export const addPayment = createAsyncThunk(
   },
 )
 
+export const editPayment = createAsyncThunk(
+  'payments/editPayment',
+  async ({
+    key,
+    payload,
+  }: {
+    key: string
+    payload: TUpdatePayload<IPayment>
+  }) => {
+    await indexDBActions.update(key, payload)
+
+    return {
+      key,
+      payload,
+    }
+  },
+)
 export const getAllPayments = createAsyncThunk(
   'payments/getAllPayments',
   async (): Promise<IPayment[]> => {

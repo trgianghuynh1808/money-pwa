@@ -4,13 +4,15 @@ import DatePicker, { DateValueType } from 'react-tailwindcss-datepicker'
 
 // *INFO: internal modules
 import { AppContext } from '@/contexts'
-import { useAppDispatch } from '@/store'
-import { addPayment } from '@/store/features/payments/paymentThunk'
+import { useAppDispatch, useAppSelector } from '@/store'
+import { addPayment, editPayment } from '@/store/features/payments/paymentThunk'
 import AddPaymentModal from './AddPaymentModal'
 import CategoryLightBox from './CategoryLightBox'
 import { CATEGORY_OPTIONS } from './constants'
 import { PaymentFormContext } from './paymentForm.context'
 import { EInputMode } from '@/enums'
+import { getValidArray } from '@/utils'
+import { IPayment, TAddPayload } from '@/interfaces'
 
 export default function PaymentForm() {
   const dispatch = useAppDispatch()
@@ -23,9 +25,9 @@ export default function PaymentForm() {
     setPrice,
     setPickDate,
   } = useContext(PaymentFormContext)
+  const { paymentsInMonth } = useAppSelector((state) => state.payments)
   const [isOpenAddPaymentModal, setIsOpenAddPaymentModal] =
     useState<boolean>(false)
-
   const [isMounted, setIsMounted] = useState<boolean>(false)
 
   const isValidDate = useMemo(() => {
@@ -36,17 +38,42 @@ export default function PaymentForm() {
     setIsOpenAddPaymentModal(true)
   }
 
-  async function handleSubmitForm(): Promise<void> {
-    const payload = {
-      price: parseInt(price),
+  function getExistsPayment(): IPayment | undefined {
+    return getValidArray(paymentsInMonth).find((item) => {
+      const isCategory = item.category === paymentCategoryOption.value
+      const isInputMode = item.mode === inputMode
+      const isDate = dayjs(pickDate?.startDate).isSame(
+        dayjs(item.payment_at),
+        'day',
+      )
+
+      return isCategory && isInputMode && isDate
+    })
+  }
+
+  async function handleAddPayment(existsPayment?: IPayment): Promise<void> {
+    const priceNumber = parseInt(price)
+    const payload: TAddPayload<IPayment> = {
       mode: inputMode,
       category: paymentCategoryOption.value,
       synced: false,
       payment_at: pickDate?.startDate as Date,
+      updated_at: new Date(),
+      price: !existsPayment ? priceNumber : existsPayment.price + priceNumber,
+    }
+
+    if (existsPayment) {
+      await dispatch(editPayment({ key: existsPayment.id, payload }))
+      return
     }
 
     await dispatch(addPayment(payload))
+  }
 
+  async function handleSubmitForm(): Promise<void> {
+    const existsPayment = getExistsPayment()
+
+    await handleAddPayment(existsPayment)
     setPrice('')
   }
 
