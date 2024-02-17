@@ -4,10 +4,14 @@ import {
   Fragment,
   SetStateAction,
   useContext,
+  useEffect,
+  useRef,
+  useState,
 } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { PaymentFormContext } from './paymentForm.context'
 import { PRICE_UNIT } from '@/constants'
+import { useInputFocus } from '@/hooks'
 
 interface IAddPaymentModalProps {
   isOpen: boolean
@@ -20,6 +24,8 @@ export default function AddPaymentModal(
 ) {
   const { isOpen, setIsOpen, handleOnSubmit } = props
   const { price, setPrice } = useContext(PaymentFormContext)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [mounted, setIsMounted] = useState(false)
 
   function closeModal(): void {
     setIsOpen(false)
@@ -29,6 +35,20 @@ export default function AddPaymentModal(
     event.preventDefault()
     handleOnSubmit()
   }
+
+  useEffect(() => {
+    if (!mounted) {
+      setIsMounted(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isOpen && mounted) {
+      setTimeout(() => {
+        inputRef.current?.click()
+      }, 300)
+    }
+  }, [isOpen, mounted])
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -62,19 +82,18 @@ export default function AddPaymentModal(
                     <p className="text-sm text-gray-500">
                       Lần này là bao nhiêu xèn đấy?
                     </p>
-                    {isOpen && (
-                      <input
-                        className="mt-2 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                        id="inline-full-name"
-                        type="tel"
-                        placeholder="Ghi vô nào"
-                        autoFocus
-                        value={price}
-                        onChange={(event) =>
-                          setPrice(event.target.value.replace(/[^0-9]/g, ''))
-                        }
-                      />
-                    )}
+                    <input
+                      ref={inputRef}
+                      id="input"
+                      className="mt-2 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                      type="tel"
+                      placeholder="Ghi vô nào"
+                      autoFocus
+                      value={price}
+                      onChange={(event) =>
+                        setPrice(event.target.value.replace(/[^0-9]/g, ''))
+                      }
+                    />
                     <span className="absolute right-2 bottom-2.5 text-sm text-gray-500">
                       ({PRICE_UNIT})
                     </span>

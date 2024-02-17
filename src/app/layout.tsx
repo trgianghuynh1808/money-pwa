@@ -32,13 +32,6 @@ export default function RootLayout({
     setIsReady(true)
   }
 
-  useEffect(() => {
-    if (!mounted) {
-      initializeApp()
-      setMounted(true)
-    }
-  }, [mounted])
-
   function LoadingSpiner() {
     // *TODO: implement loadingSpiner later
     return (
@@ -47,6 +40,13 @@ export default function RootLayout({
       </div>
     )
   }
+
+  useEffect(() => {
+    if (!mounted) {
+      initializeApp()
+      setMounted(true)
+    }
+  }, [mounted])
 
   return (
     <html lang="en">
