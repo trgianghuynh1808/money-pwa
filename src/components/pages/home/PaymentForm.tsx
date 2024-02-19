@@ -35,8 +35,7 @@ export default function PaymentForm() {
   }, [pickDate])
 
   function onClickAddBtn(): void {
-    prompt('test')
-    // setIsOpenAddPaymentModal(true)
+    setIsOpenAddPaymentModal(true)
   }
 
   function getExistsPayment(): IPayment | undefined {
