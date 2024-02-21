@@ -33,6 +33,8 @@ export default function AddPaymentModal(
 
   function onSubmit(event: FormEvent): void {
     event.preventDefault()
+    console.log('run on submit')
+
     handleOnSubmit()
   }
 

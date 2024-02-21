@@ -1,6 +1,11 @@
 import { EPaymentCategory } from '@/enums'
 import { IOption } from '@/interfaces'
 
+export enum EPaymentFormMode {
+  ADD = 0,
+  UPDATE = 1,
+}
+
 const CATEGORY_ICON_MAP = {
   FOOD: '/images/icons/food-icon.png',
   SHOPPING: '/images/icons/shopping-icon.png',

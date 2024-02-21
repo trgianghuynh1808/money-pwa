@@ -7,9 +7,11 @@ import {
   addPayment,
   editPayment,
   getAllPayments,
+  removePayment,
   syncPaymentsIntoOfflineDB,
 } from './paymentThunk'
 import { getValidArray } from '@/utils'
+import { remove } from 'firebase/database'
 
 interface IPaymentState {
   paymentsInMonth: IPayment[]
@@ -60,6 +62,21 @@ const paymentSlice = createSlice({
         }
       })
       .addCase(editPayment.rejected, (state) => {
+        state.loading = false
+      })
+      .addCase(removePayment.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(removePayment.fulfilled, (state, action) => {
+        const { key } = action.payload
+
+        state.loading = false
+
+        state.paymentsInMonth = state.paymentsInMonth.filter((item) => {
+          return item.id !== key
+        })
+      })
+      .addCase(removePayment.rejected, (state) => {
         state.loading = false
       })
       .addCase(getAllPayments.fulfilled, (state, action) => {

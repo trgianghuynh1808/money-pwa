@@ -40,6 +40,18 @@ export const editPayment = createAsyncThunk(
     }
   },
 )
+
+export const removePayment = createAsyncThunk(
+  'payments/removePayment',
+  async ({ key }: { key: string }) => {
+    await indexDBActions.delete(key)
+
+    return {
+      key,
+    }
+  },
+)
+
 export const getAllPayments = createAsyncThunk(
   'payments/getAllPayments',
   async (): Promise<IPayment[]> => {

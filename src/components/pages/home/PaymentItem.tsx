@@ -1,10 +1,12 @@
-import Image from 'next/image'
 import dayjs from 'dayjs'
+import Image from 'next/image'
+import { useContext } from 'react'
 
 //*INFO: internal modules
-import { IPayment } from '@/interfaces'
 import { EPaymentCategory } from '@/enums'
-import { CATEGORY_OPTIONS } from './constants'
+import { IPayment } from '@/interfaces'
+import { CATEGORY_OPTIONS, EPaymentFormMode } from './constants'
+import { PaymentFormContext } from './paymentForm.context'
 
 interface IPaymentItemProps {
   data: IPayment
@@ -12,13 +14,24 @@ interface IPaymentItemProps {
 
 export default function PaymentItem(props: Readonly<IPaymentItemProps>) {
   const { data } = props
+  const { setPrice, setFormMode, setShowPaymentModal } =
+    useContext(PaymentFormContext)
 
   function getIconSrc(category: EPaymentCategory): string {
     return CATEGORY_OPTIONS.find((item) => item.value === category)?.iconSrc!
   }
 
+  function onClickItem(): void {
+    setPrice(`${data.price ?? ''}`)
+    setFormMode(EPaymentFormMode.UPDATE)
+    setShowPaymentModal(true)
+  }
+
   return (
-    <div className="w-full rounded-lg bg-white shadow-md flex justify-between p-3 items-center">
+    <div
+      className="w-full rounded-lg bg-white shadow-md flex justify-between p-3 items-center"
+      onClick={onClickItem}
+    >
       <div className="flex items-center">
         <Image
           className="w-6 h-6 mr-2"

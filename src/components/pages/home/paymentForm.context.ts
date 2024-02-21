@@ -3,7 +3,7 @@ import { DateValueType } from 'react-tailwindcss-datepicker'
 
 // *INFO: internal modules
 import { IOption } from '@/interfaces'
-import { CATEGORY_OPTIONS } from './constants'
+import { CATEGORY_OPTIONS, EPaymentFormMode } from './constants'
 
 interface IPaymentFormContext {
   paymentCategoryOption: IOption
@@ -12,6 +12,10 @@ interface IPaymentFormContext {
   setPrice: Dispatch<SetStateAction<string>>
   pickDate: DateValueType
   setPickDate: Dispatch<SetStateAction<DateValueType>>
+  formMode: EPaymentFormMode
+  setFormMode: Dispatch<SetStateAction<EPaymentFormMode>>
+  showPaymentModal: boolean
+  setShowPaymentModal: Dispatch<SetStateAction<boolean>>
 }
 
 export const PaymentFormContext = createContext<IPaymentFormContext>({
@@ -24,4 +28,8 @@ export const PaymentFormContext = createContext<IPaymentFormContext>({
     endDate: new Date(),
   },
   setPickDate: () => {},
+  formMode: EPaymentFormMode.ADD,
+  setFormMode: () => {},
+  showPaymentModal: false,
+  setShowPaymentModal: () => {},
 })

@@ -5,10 +5,14 @@ import DatePicker, { DateValueType } from 'react-tailwindcss-datepicker'
 // *INFO: internal modules
 import { AppContext } from '@/contexts'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { addPayment, editPayment } from '@/store/features/payments/paymentThunk'
-import AddPaymentModal from './AddPaymentModal'
+import {
+  addPayment,
+  editPayment,
+  removePayment,
+} from '@/store/features/payments/paymentThunk'
+import PaymentModal from './PaymentModal'
 import CategoryLightBox from './CategoryLightBox'
-import { CATEGORY_OPTIONS } from './constants'
+import { CATEGORY_OPTIONS, EPaymentFormMode } from './constants'
 import { PaymentFormContext } from './paymentForm.context'
 import { EInputMode } from '@/enums'
 import { getValidArray } from '@/utils'
@@ -24,10 +28,13 @@ export default function PaymentForm() {
     setPaymentCategoryOption,
     setPrice,
     setPickDate,
+    formMode,
+    setFormMode,
+    showPaymentModal,
+    setShowPaymentModal,
   } = useContext(PaymentFormContext)
   const { paymentsInMonth } = useAppSelector((state) => state.payments)
-  const [isOpenAddPaymentModal, setIsOpenAddPaymentModal] =
-    useState<boolean>(false)
+
   const [isMounted, setIsMounted] = useState<boolean>(false)
 
   const isValidDate = useMemo(() => {
@@ -35,7 +42,8 @@ export default function PaymentForm() {
   }, [pickDate])
 
   function onClickAddBtn(): void {
-    setIsOpenAddPaymentModal(true)
+    setFormMode(EPaymentFormMode.ADD)
+    setShowPaymentModal(true)
   }
 
   function getExistsPayment(): IPayment | undefined {
@@ -70,10 +78,37 @@ export default function PaymentForm() {
     await dispatch(addPayment(payload))
   }
 
+  async function handleUpdatePayment(existsPayment: IPayment): Promise<void> {
+    const priceNumber = parseInt(price)
+
+    const payload: TAddPayload<IPayment> = {
+      mode: inputMode,
+      category: paymentCategoryOption.value,
+      synced: false,
+      payment_at: pickDate?.startDate as Date,
+      updated_at: new Date(),
+      price: priceNumber,
+    }
+
+    if (priceNumber) {
+      await dispatch(editPayment({ key: existsPayment.id, payload }))
+      return
+    }
+
+    await dispatch(removePayment({ key: existsPayment.id }))
+  }
+
   async function handleSubmitForm(): Promise<void> {
     const existsPayment = getExistsPayment()
 
-    await handleAddPayment(existsPayment)
+    switch (formMode) {
+      case EPaymentFormMode.ADD:
+        await handleAddPayment(existsPayment)
+        break
+      default:
+        await handleUpdatePayment(existsPayment!)
+        break
+    }
     setPrice('')
   }
 
@@ -83,7 +118,8 @@ export default function PaymentForm() {
 
   useEffect(() => {
     if (isMounted) {
-      setIsOpenAddPaymentModal(true)
+      setFormMode(EPaymentFormMode.ADD)
+      setShowPaymentModal(true)
     }
   }, [paymentCategoryOption])
 
@@ -95,9 +131,9 @@ export default function PaymentForm() {
 
   return (
     <div className="grid grid-cols-4 gap-4 ">
-      <AddPaymentModal
-        isOpen={isOpenAddPaymentModal}
-        setIsOpen={setIsOpenAddPaymentModal}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        setIsOpen={setShowPaymentModal}
         handleOnSubmit={handleSubmitForm}
       />
 

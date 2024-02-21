@@ -6,7 +6,10 @@ import { DateValueType } from 'react-tailwindcss-datepicker'
 
 // *INFO: internal modules
 import { PaymentForm, PaymentList } from '@/components/pages/home'
-import { CATEGORY_OPTIONS } from '@/components/pages/home/constants'
+import {
+  CATEGORY_OPTIONS,
+  EPaymentFormMode,
+} from '@/components/pages/home/constants'
 import { PaymentFormContext } from '@/components/pages/home/paymentForm.context'
 import { SYNCED_AT_STORAGE_KEY } from '@/constants'
 import { useAppDispatch } from '@/store'
@@ -26,6 +29,10 @@ export default function Home() {
     startDate: new Date(),
     endDate: new Date(),
   })
+  const [formMode, setFormMode] = useState<EPaymentFormMode>(
+    EPaymentFormMode.ADD,
+  )
+  const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
 
   function handleAfterAddPayment(): void {
     const isSyncExpired = checkExpiredSyncDuration()
@@ -72,6 +79,10 @@ export default function Home() {
         setPrice,
         pickDate,
         setPickDate,
+        formMode,
+        setFormMode,
+        showPaymentModal,
+        setShowPaymentModal,
       }}
     >
       <div className="flex-1 p-3">
