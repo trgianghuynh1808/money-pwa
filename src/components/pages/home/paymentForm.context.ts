@@ -16,6 +16,8 @@ interface IPaymentFormContext {
   setFormMode: Dispatch<SetStateAction<EPaymentFormMode>>
   showPaymentModal: boolean
   setShowPaymentModal: Dispatch<SetStateAction<boolean>>
+  selectedKey: string
+  setSelectedKey: Dispatch<SetStateAction<string>>
 }
 
 export const PaymentFormContext = createContext<IPaymentFormContext>({
@@ -32,4 +34,6 @@ export const PaymentFormContext = createContext<IPaymentFormContext>({
   setFormMode: () => {},
   showPaymentModal: false,
   setShowPaymentModal: () => {},
+  selectedKey: '',
+  setSelectedKey: () => {},
 })

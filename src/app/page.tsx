@@ -33,6 +33,7 @@ export default function Home() {
     EPaymentFormMode.ADD,
   )
   const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
+  const [selectedKey, setSelectedKey] = useState<string>('')
 
   function handleAfterAddPayment(): void {
     const isSyncExpired = checkExpiredSyncDuration()
@@ -83,6 +84,8 @@ export default function Home() {
         setFormMode,
         showPaymentModal,
         setShowPaymentModal,
+        selectedKey,
+        setSelectedKey,
       }}
     >
       <div className="flex-1 p-3">

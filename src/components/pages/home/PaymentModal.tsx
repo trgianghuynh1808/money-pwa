@@ -5,6 +5,7 @@ import {
   SetStateAction,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -12,6 +13,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { PaymentFormContext } from './paymentForm.context'
 import { PRICE_UNIT } from '@/constants'
 import { NumbericKeyboard } from '@/components/common'
+import { EPaymentFormMode } from './constants'
 
 interface IAddPaymentModalProps {
   isOpen: boolean
@@ -23,9 +25,16 @@ export default function AddPaymentModal(
   props: Readonly<IAddPaymentModalProps>,
 ) {
   const { isOpen, setIsOpen, handleOnSubmit } = props
-  const { price, setPrice } = useContext(PaymentFormContext)
+  const { price, setPrice, formMode } = useContext(PaymentFormContext)
   const inputRef = useRef<HTMLInputElement>(null)
   const [mounted, setIsMounted] = useState(false)
+  const isDisabledButton = useMemo(() => {
+    if (formMode === EPaymentFormMode.ADD) {
+      return !price || price === '0'
+    }
+
+    return !price
+  }, [formMode, price])
 
   function closeModal(): void {
     setIsOpen(false)
@@ -99,7 +108,7 @@ export default function AddPaymentModal(
                       type="submit"
                       className="inline-flex justify-center rounded-md border border-transparent bg-teal-200 w-full py-2 text-sm font-medium text-teal-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:opacity-30"
                       onClick={closeModal}
-                      disabled={!price}
+                      disabled={isDisabledButton}
                     >
                       Okay
                     </button>

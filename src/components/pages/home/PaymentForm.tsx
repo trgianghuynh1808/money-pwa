@@ -32,6 +32,7 @@ export default function PaymentForm() {
     setFormMode,
     showPaymentModal,
     setShowPaymentModal,
+    selectedKey,
   } = useContext(PaymentFormContext)
   const { paymentsInMonth } = useAppSelector((state) => state.payments)
 
@@ -48,14 +49,18 @@ export default function PaymentForm() {
 
   function getExistsPayment(): IPayment | undefined {
     return getValidArray(paymentsInMonth).find((item) => {
-      const isCategory = item.category === paymentCategoryOption.value
-      const isInputMode = item.mode === inputMode
-      const isDate = dayjs(pickDate?.startDate).isSame(
-        dayjs(item.payment_at),
-        'day',
-      )
+      if (formMode === EPaymentFormMode.ADD) {
+        const isCategory = item.category === paymentCategoryOption.value
+        const isInputMode = item.mode === inputMode
+        const isDate = dayjs(pickDate?.startDate).isSame(
+          dayjs(item.payment_at),
+          'day',
+        )
 
-      return isCategory && isInputMode && isDate
+        return isCategory && isInputMode && isDate
+      }
+
+      return item.id === selectedKey
     })
   }
 
@@ -80,6 +85,10 @@ export default function PaymentForm() {
 
   async function handleUpdatePayment(existsPayment: IPayment): Promise<void> {
     const priceNumber = parseInt(price)
+
+    console.log({
+      existsPayment,
+    })
 
     const payload: TAddPayload<IPayment> = {
       mode: existsPayment.mode,

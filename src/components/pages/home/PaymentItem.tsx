@@ -14,7 +14,7 @@ interface IPaymentItemProps {
 
 export default function PaymentItem(props: Readonly<IPaymentItemProps>) {
   const { data } = props
-  const { setPrice, setFormMode, setShowPaymentModal } =
+  const { setPrice, setFormMode, setShowPaymentModal, setSelectedKey } =
     useContext(PaymentFormContext)
 
   function getIconSrc(category: EPaymentCategory): string {
@@ -24,6 +24,7 @@ export default function PaymentItem(props: Readonly<IPaymentItemProps>) {
   function onClickItem(): void {
     setPrice(`${data.price ?? ''}`)
     setFormMode(EPaymentFormMode.UPDATE)
+    setSelectedKey(data.id)
     setShowPaymentModal(true)
   }
 
