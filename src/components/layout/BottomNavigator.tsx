@@ -15,7 +15,7 @@ export default function BottomTabNavigator() {
   return (
     <section
       id="bottom-navigation"
-      className="w-full bg-violet-600 shadow fixed bottom-0"
+      className="w-full bg-teal-500 shadow fixed bottom-0"
     >
       <div id="tabs" className="flex justify-between">
         <Link
@@ -27,7 +27,7 @@ export default function BottomTabNavigator() {
         </Link>
         <Link
           href={routes.summary.value}
-          className={`w-full ${checkIsActive(routes.summary.value) ? 'text-yellow-300 font-bold' : 'text-white'} focus:font-bold justify-center inline-block text-center pt-2 pb-1`}
+          className={`w-full ${checkIsActive(routes.summary.value) ? 'text-yellow-200 font-bold' : 'text-white'} focus:font-bold justify-center inline-block text-center pt-2 pb-1`}
         >
           <ExploreIcon />
           <span className="tab tab-kategori block text-md">Danh sách</span>

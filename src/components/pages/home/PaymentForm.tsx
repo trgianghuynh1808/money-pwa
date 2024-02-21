@@ -125,7 +125,7 @@ export default function PaymentForm() {
       </div>
       <div className="col-span-2">
         <button
-          className="inline-flex items-center justify-center w-full h-10 text-base font-medium text-center text-indigo-100 border border-indigo-500 rounded-lg shadow-sm cursor-pointer hover:text-white bg-gradient-to-br from-purple-500 via-indigo-500 to-indigo-500 disabled:opacity-30"
+          className="inline-flex items-center justify-center w-full h-10 text-base font-medium text-center text-white border border-indigo-500 rounded-lg shadow-sm cursor-pointer hover:text-white bg-teal-600 isabled:opacity-30"
           disabled={!isValidDate || inputMode === EInputMode.ALL}
           onClick={onClickAddBtn}
         >
