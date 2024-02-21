@@ -82,10 +82,10 @@ export default function PaymentForm() {
     const priceNumber = parseInt(price)
 
     const payload: TAddPayload<IPayment> = {
-      mode: inputMode,
-      category: paymentCategoryOption.value,
+      mode: existsPayment.mode,
+      category: existsPayment.category,
       synced: false,
-      payment_at: pickDate?.startDate as Date,
+      payment_at: existsPayment.payment_at,
       updated_at: new Date(),
       price: priceNumber,
     }
