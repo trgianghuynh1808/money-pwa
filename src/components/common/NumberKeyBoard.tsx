@@ -38,7 +38,7 @@ export default function NumbericKeyBoard(
       {KEY_MAP.map((key) => {
         return (
           <div
-            className="text-center rounded-md bg-teal-500 active:bg-teal-700 text-white py-1.5"
+            className="text-center rounded-md bg-blue-500 active:bg-blue-700 text-white py-1.5"
             key={key}
             onClick={() => onClickKey(key)}
           >

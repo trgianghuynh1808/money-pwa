@@ -88,7 +88,7 @@ export default function AddPaymentModal(
                     <input
                       ref={inputRef}
                       id="input"
-                      className="mt-2 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-teal-500"
+                      className="mt-2 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
                       type="tel"
                       placeholder="Ghi vô nào"
                       readOnly
@@ -106,7 +106,7 @@ export default function AddPaymentModal(
                   <div className="mt-4">
                     <button
                       type="submit"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-teal-200 w-full py-2 text-sm font-medium text-teal-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:opacity-30"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-teal-300 w-full py-2 text-sm font-medium text-white hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:opacity-30"
                       onClick={closeModal}
                       disabled={isDisabledButton}
                     >
