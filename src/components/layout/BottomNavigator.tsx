@@ -15,7 +15,7 @@ export default function BottomTabNavigator() {
   return (
     <section
       id="bottom-navigation"
-      className="w-full bg-blue-600 shadow fixed bottom-0"
+      className="w-full md:w-3/5 lg:w-1/5 bg-blue-600 shadow fixed bottom-0"
     >
       <div id="tabs" className="flex justify-between">
         <Link

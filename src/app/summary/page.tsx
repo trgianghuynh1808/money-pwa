@@ -1,7 +1,9 @@
+import { TotalSummarySection } from '@/components/pages/summary'
+
 export default function SummaryPage() {
   return (
-    <div className="flex">
-      <h1>Summary page</h1>
+    <div className="flex-1 p-3">
+      <TotalSummarySection />
     </div>
   )
 }

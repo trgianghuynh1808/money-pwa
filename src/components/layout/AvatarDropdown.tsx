@@ -5,29 +5,23 @@ import { Fragment, useContext } from 'react'
 // *INFO: internal modules
 import { AppContext } from '@/contexts'
 import { EInputMode } from '@/enums'
-
-const avatarMap = {
-  GIRL: '/images/girl.webp',
-  BOY: '/images/boy.png',
-  FAMILY: '/images/family.webp',
-  ALL: '/images/all-money.jpg',
-}
+import { INPUT_MODE_SRC_MAP } from '@/constants'
 
 const INPUT_OPTIONS = [
   {
     label: 'Vợ Iu',
     value: EInputMode.GIRL,
-    avatarSrc: avatarMap.GIRL,
+    avatarSrc: INPUT_MODE_SRC_MAP.GIRL,
   },
   {
     label: 'Bòa Bòa',
     value: EInputMode.BOY,
-    avatarSrc: avatarMap.BOY,
+    avatarSrc: INPUT_MODE_SRC_MAP.BOY,
   },
   {
     label: 'Gia Đình Nhỏ',
     value: EInputMode.FAMILY,
-    avatarSrc: avatarMap.FAMILY,
+    avatarSrc: INPUT_MODE_SRC_MAP.FAMILY,
   },
 ]
 export default function AvatarDropdown() {
@@ -36,7 +30,7 @@ export default function AvatarDropdown() {
   function getAvatarSrc(currentInputMode: EInputMode): string {
     return (
       INPUT_OPTIONS.find((option) => option.value === currentInputMode)
-        ?.avatarSrc ?? avatarMap.ALL
+        ?.avatarSrc ?? INPUT_MODE_SRC_MAP.ALL
     )
   }
 
