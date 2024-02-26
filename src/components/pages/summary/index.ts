@@ -1,3 +1,4 @@
 import TotalSummarySection from './TotalSummarySection'
+import FilterSection from './FilterSection'
 
-export { TotalSummarySection }
+export { FilterSection, TotalSummarySection }

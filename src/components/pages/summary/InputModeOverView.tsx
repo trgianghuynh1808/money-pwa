@@ -1,8 +1,12 @@
 import Image from 'next/image'
+import { useMemo } from 'react'
 
 // *INFO: internal modules
 import { INPUT_MODE_SRC_MAP } from '@/constants'
 import { EInputMode } from '@/enums'
+import { calculateTotalByInputMode } from './utils'
+import { useAppSelector } from '@/store'
+import { formatNumberWithCommas } from '@/utils'
 
 interface IInputModeOverviewProps {
   mode: EInputMode
@@ -13,6 +17,11 @@ export default function InputModeOverview(
 ) {
   const { mode } = props
   const inputImgSrc = getInputImgSrc(mode)
+  const { paymentsInMonth } = useAppSelector((state) => state.payments)
+
+  const totalPayment = useMemo(() => {
+    return calculateTotalByInputMode(paymentsInMonth, mode)
+  }, [paymentsInMonth, mode])
 
   function getInputImgSrc(currentMode: EInputMode): string {
     switch (currentMode) {
@@ -28,7 +37,9 @@ export default function InputModeOverview(
   }
 
   return (
-    <div className="flex rounded-lg bg-white shadow-md p-2 items-center">
+    <div
+      className={`flex rounded-lg bg-white shadow-md p-2 items-center ${mode === EInputMode.FAMILY ? 'col-span-2 justify-center' : 'col-span-1'}`}
+    >
       <Image
         className="w-10 h-10 mr-2 rounded-lg"
         src={inputImgSrc}
@@ -36,7 +47,7 @@ export default function InputModeOverview(
         height={6}
         alt="icon"
       />
-      <p>1000</p>
+      <p>{formatNumberWithCommas(totalPayment)}K</p>
     </div>
   )
 }

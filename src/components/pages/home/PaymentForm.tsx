@@ -86,10 +86,6 @@ export default function PaymentForm() {
   async function handleUpdatePayment(existsPayment: IPayment): Promise<void> {
     const priceNumber = parseInt(price)
 
-    console.log({
-      existsPayment,
-    })
-
     const payload: TAddPayload<IPayment> = {
       mode: existsPayment.mode,
       category: existsPayment.category,
