@@ -12,7 +12,9 @@ interface IMonthFilterLightBoxProps {
   options: IOption[]
 }
 
-export default function MonthFilterLightBox(props: IMonthFilterLightBoxProps) {
+export default function MonthFilterLightBox(
+  props: Readonly<IMonthFilterLightBoxProps>,
+) {
   const { selectedOption, setSelectedOption, options } = props
 
   return (

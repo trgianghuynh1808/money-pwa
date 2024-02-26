@@ -6,6 +6,12 @@ export enum EInputMode {
   FAMILY = 2,
 }
 
+export enum EViewMode {
+  BOY = 0,
+  GIRL = 1,
+  FAMILY = 2,
+}
+
 export enum EPaymentCategory {
   FOOD = 0,
   SHOPPING = 1,

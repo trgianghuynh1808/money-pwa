@@ -42,7 +42,6 @@ export default function AddPaymentModal(
 
   function onSubmit(event: FormEvent): void {
     event.preventDefault()
-    console.log('run on submit')
 
     handleOnSubmit()
   }
@@ -106,7 +105,7 @@ export default function AddPaymentModal(
                   <div className="mt-4">
                     <button
                       type="submit"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-purple-600 w-full py-2 text-sm font-medium text-white hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:opacity-30"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-cyan-500 w-full py-2 text-sm font-medium text-white hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:opacity-30"
                       onClick={closeModal}
                       disabled={isDisabledButton}
                     >

@@ -1,7 +1,7 @@
-import { EInputMode } from '@/enums'
+import { EViewMode } from '@/enums'
 
-export const INPUT_MODE_VIEWABLE = [
-  EInputMode.BOY,
-  EInputMode.GIRL,
-  EInputMode.FAMILY,
+export const VIEW_MODES: EViewMode[] = [
+  EViewMode.BOY,
+  EViewMode.GIRL,
+  EViewMode.FAMILY,
 ]
