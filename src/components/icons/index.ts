@@ -1,4 +1,6 @@
-import HomeIcon from './HomeIcon'
 import ExploreIcon from './ExploreIcon'
+import EyeIcon from './EyeIcon'
+import EyeSlashIcon from './EyeSlashIcon'
+import HomeIcon from './HomeIcon'
 
-export { HomeIcon, ExploreIcon }
+export { ExploreIcon, EyeIcon, EyeSlashIcon, HomeIcon }
