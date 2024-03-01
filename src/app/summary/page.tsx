@@ -14,7 +14,7 @@ import {
 import { EViewMode } from '@/enums'
 import { IOption } from '@/interfaces'
 import { useAppDispatch } from '@/store'
-import { getAllPayments } from '@/store/features/payments/paymentThunk'
+import { getPaymentsInMonth } from '@/store/features/payments/paymentThunk'
 
 export default function SummaryPage() {
   const dispatch = useAppDispatch()
@@ -23,7 +23,7 @@ export default function SummaryPage() {
   const [viewMode, setViewMode] = useState<EViewMode>()
 
   useEffect(() => {
-    dispatch(getAllPayments())
+    dispatch(getPaymentsInMonth())
   }, [])
 
   return (

@@ -52,10 +52,12 @@ export const removePayment = createAsyncThunk(
   },
 )
 
-export const getAllPayments = createAsyncThunk(
-  'payments/getAllPayments',
+export const getPaymentsInMonth = createAsyncThunk(
+  'payments/getPaymentsInMonth',
   async (): Promise<IPayment[]> => {
-    const payments = await indexDBActions.getAll()
+    const payments = await indexDBActions.getWithFilter((item) => {
+      return dayjs(item.payment_at).month() === dayjs().month()
+    })
 
     return payments ?? []
   },

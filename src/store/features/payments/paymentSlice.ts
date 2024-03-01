@@ -1,17 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit'
 import type { SerializedError } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 // *INFO: internal modules
 import { IPayment } from '@//interfaces'
+import { getValidArray } from '@/utils'
 import {
   addPayment,
   editPayment,
-  getAllPayments,
+  getPaymentsInMonth,
   removePayment,
   syncPaymentsIntoOfflineDB,
 } from './paymentThunk'
-import { getValidArray } from '@/utils'
-import { remove } from 'firebase/database'
 
 interface IPaymentState {
   paymentsInMonth: IPayment[]
@@ -79,14 +78,14 @@ const paymentSlice = createSlice({
       .addCase(removePayment.rejected, (state) => {
         state.loading = false
       })
-      .addCase(getAllPayments.fulfilled, (state, action) => {
+      .addCase(getPaymentsInMonth.fulfilled, (state, action) => {
         state.paymentsInMonth = action.payload
         state.fetching = false
       })
-      .addCase(getAllPayments.pending, (state) => {
+      .addCase(getPaymentsInMonth.pending, (state) => {
         state.fetching = true
       })
-      .addCase(getAllPayments.rejected, (state) => {
+      .addCase(getPaymentsInMonth.rejected, (state) => {
         state.fetching = false
       })
       .addCase(syncPaymentsIntoOfflineDB.fulfilled, (state, action) => {

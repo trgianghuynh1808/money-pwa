@@ -2,7 +2,7 @@ import { useContext, useMemo, useState } from 'react'
 
 // *INFO: internal modules
 import { useAppSelector } from '@/store'
-import { getValidArray } from '@/utils'
+import { getValidArray, isEmptyArray } from '@/utils'
 import { SummaryFilterContext } from './summaryFilter.context'
 import CategoryView from './CategoryView'
 import { EyeIcon, EyeSlashIcon } from '@/components/icons'
@@ -32,12 +32,15 @@ export default function SummaryDetailsSection() {
       className="w-full rounded-lg shadow-md p-3 mt-4"
       style={{ height: showDetails ? '400px' : 'auto', overflowY: 'auto' }}
     >
-      <div
-        className="w-full flex justify-end text-gray-600"
-        onClick={toggleShowDetails}
-      >
-        {!showDetails ? <EyeSlashIcon /> : <EyeIcon />}
-      </div>
+      {!isEmptyArray(paymentsInViewMode) && (
+        <div
+          className="w-full flex justify-end text-gray-600"
+          onClick={toggleShowDetails}
+        >
+          {!showDetails ? <EyeSlashIcon /> : <EyeIcon />}
+        </div>
+      )}
+
       <CategoryView payments={paymentsInViewMode} />
       <DayViewModal
         isOpen={showDetails}

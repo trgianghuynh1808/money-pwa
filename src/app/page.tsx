@@ -14,7 +14,7 @@ import { PaymentFormContext } from '@/components/pages/home/paymentForm.context'
 import { SYNCED_AT_STORAGE_KEY } from '@/constants'
 import { useAppDispatch } from '@/store'
 import {
-  getAllPayments,
+  getPaymentsInMonth,
   syncPaymentsIntoOfflineDB,
   syncPaymentsIntoOnlineDB,
 } from '@/store/features/payments/paymentThunk'
@@ -68,7 +68,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    dispatch(getAllPayments())
+    dispatch(getPaymentsInMonth())
   }, [])
 
   return (
