@@ -6,7 +6,7 @@ import { getValidArray } from '@/utils'
 import { SummaryFilterContext } from './summaryFilter.context'
 import CategoryView from './CategoryView'
 import { EyeIcon, EyeSlashIcon } from '@/components/icons'
-import DayView from './DayView'
+import DayViewModal from './DayViewModal'
 
 export default function SummaryDetailsSection() {
   const { paymentsInMonth } = useAppSelector((state) => state.payments)
@@ -38,11 +38,12 @@ export default function SummaryDetailsSection() {
       >
         {!showDetails ? <EyeSlashIcon /> : <EyeIcon />}
       </div>
-      {!showDetails ? (
-        <CategoryView payments={paymentsInViewMode} />
-      ) : (
-        <DayView payments={paymentsInViewMode} />
-      )}
+      <CategoryView payments={paymentsInViewMode} />
+      <DayViewModal
+        isOpen={showDetails}
+        setIsOpen={setShowDetails}
+        payments={paymentsInViewMode}
+      />
     </section>
   )
 }
