@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 // *INFO: internal modules
 import { EPaymentCategory } from '@/enums'
 import { IPayment } from '@/interfaces'
-import { isEmptyArray } from '@/utils'
+import { formatNumberWithCommas, isEmptyArray } from '@/utils'
 import { CATEGORY_OPTIONS } from '../home/constants'
 
 interface ICategoryViewProps {
@@ -56,7 +56,7 @@ export default function CategoryView(props: Readonly<ICategoryViewProps>) {
                     height={6}
                     alt="icon"
                   />
-                  <span>{item.total}</span>
+                  <span>{formatNumberWithCommas(item.total)}</span>
                 </div>
               </div>
             )

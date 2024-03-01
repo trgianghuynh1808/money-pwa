@@ -6,7 +6,7 @@ import { Dispatch, Fragment, SetStateAction, useMemo } from 'react'
 // *INFO: internal modules
 import { EPaymentCategory } from '@/enums'
 import { IPayment } from '@/interfaces'
-import { getValidArray } from '@/utils'
+import { formatNumberWithCommas, getValidArray } from '@/utils'
 import { CATEGORY_OPTIONS } from '../home/constants'
 
 interface IDayViewProps {
@@ -48,6 +48,12 @@ export default function DayViewModal(
     return CATEGORY_OPTIONS.find((item) => item.value === category)?.iconSrc!
   }
 
+  function calculateTotal(currentPayments: IPayment[]): number {
+    return getValidArray(currentPayments).reduce((acc, item: IPayment) => {
+      return acc + item.price
+    }, 0)
+  }
+
   function closeModal(): void {
     setIsOpen(false)
   }
@@ -83,9 +89,19 @@ export default function DayViewModal(
                   {groupByDay.map((item, index) => {
                     return (
                       <div key={index}>
-                        <p className="text-base font-semibold text-gray-600 underline underline-offset-1 mb-1">
-                          {item.day}
-                        </p>
+                        <div className="flex justify-start gap-1">
+                          <p className="text-base font-semibold text-gray-600 underline underline-offset-1 mb-1">
+                            {item.day}
+                          </p>
+                          <p className="text-blue-900 font-semibold">
+                            -{' '}
+                            {formatNumberWithCommas(
+                              calculateTotal(item.payments),
+                            )}
+                            K
+                          </p>
+                        </div>
+
                         <div className="grid grid-cols-3 gap-2">
                           {getValidArray(item.payments).map((payment) => {
                             return (
@@ -99,7 +115,7 @@ export default function DayViewModal(
                                     alt="icon"
                                   />
 
-                                  <p>{payment.price}</p>
+                                  <p>{formatNumberWithCommas(payment.price)}</p>
                                 </div>
                               </div>
                             )
