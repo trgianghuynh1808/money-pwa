@@ -3,9 +3,15 @@ import Image from 'next/image'
 import { Fragment, useContext } from 'react'
 
 // *INFO: internal modules
+import { INPUT_MODE_SRC_MAP } from '@/constants'
 import { AppContext } from '@/contexts'
 import { EInputMode } from '@/enums'
-import { INPUT_MODE_SRC_MAP } from '@/constants'
+import { useAppDispatch } from '@/store'
+import {
+  getPaymentsInMonth,
+  syncPaymentsIntoOfflineDB,
+  syncPaymentsIntoOnlineDB,
+} from '@/store/features/payments/paymentThunk'
 
 const INPUT_OPTIONS = [
   {
@@ -24,14 +30,21 @@ const INPUT_OPTIONS = [
     avatarSrc: INPUT_MODE_SRC_MAP.FAMILY,
   },
 ]
+
 export default function AvatarDropdown() {
   const { inputMode, setInputMode } = useContext(AppContext)
+  const dispatch = useAppDispatch()
 
   function getAvatarSrc(currentInputMode: EInputMode): string {
     return (
       INPUT_OPTIONS.find((option) => option.value === currentInputMode)
         ?.avatarSrc ?? INPUT_MODE_SRC_MAP.ALL
     )
+  }
+
+  async function handleSyncPayments(): Promise<void> {
+    await dispatch(syncPaymentsIntoOnlineDB())
+    await dispatch(syncPaymentsIntoOfflineDB())
   }
 
   return (
@@ -90,7 +103,7 @@ export default function AvatarDropdown() {
               <Menu.Item>
                 <button
                   className={`text-gray-900 group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  onClick={() => {}}
+                  onClick={handleSyncPayments}
                 >
                   Đồng Bộ Dữ Liệu
                 </button>

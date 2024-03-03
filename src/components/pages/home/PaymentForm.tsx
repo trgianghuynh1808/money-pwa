@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import DatePicker, { DateValueType } from 'react-tailwindcss-datepicker'
+import { v4 as uuidv4 } from 'uuid'
 
 // *INFO: internal modules
 import { AppContext } from '@/contexts'
@@ -66,13 +67,16 @@ export default function PaymentForm() {
 
   async function handleAddPayment(existsPayment?: IPayment): Promise<void> {
     const priceNumber = parseInt(price)
+    const uuid = uuidv4()
+
     const payload: TAddPayload<IPayment> = {
       mode: inputMode,
       category: paymentCategoryOption.value,
       synced: false,
-      payment_at: pickDate?.startDate as Date,
+      payment_at: dayjs(pickDate?.startDate).toDate(),
       updated_at: new Date(),
       price: !existsPayment ? priceNumber : existsPayment.price + priceNumber,
+      indentity_id: uuid,
     }
 
     if (existsPayment) {

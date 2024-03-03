@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   const [mounted, setMounted] = useState<boolean>(false)
   const [isReady, setIsReady] = useState<boolean>(false)
-  const [inputMode, setInputMode] = useState<EInputMode>(EInputMode.GIRL)
+  const [inputMode, setInputMode] = useState<EInputMode>(EInputMode.FAMILY)
 
   async function initDB(): Promise<void> {
     await indexDB.initialize()

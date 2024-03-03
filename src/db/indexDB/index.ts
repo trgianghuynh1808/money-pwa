@@ -76,11 +76,11 @@ class IndexDB {
     const now = new Date()
 
     const newEnitty = {
-      ...value,
       id: newId,
       created_at: now,
       updated_at: now,
       removed: false,
+      ...value,
     }
 
     // *INFO: response new id

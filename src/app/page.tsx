@@ -1,6 +1,5 @@
 'use client'
 
-import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { DateValueType } from 'react-tailwindcss-datepicker'
 
@@ -11,13 +10,8 @@ import {
   EPaymentFormMode,
 } from '@/components/pages/home/constants'
 import { PaymentFormContext } from '@/components/pages/home/paymentForm.context'
-import { SYNCED_AT_STORAGE_KEY } from '@/constants'
 import { useAppDispatch } from '@/store'
-import {
-  getPaymentsInMonth,
-  syncPaymentsIntoOfflineDB,
-  syncPaymentsIntoOnlineDB,
-} from '@/store/features/payments/paymentThunk'
+import { getPaymentsInMonth } from '@/store/features/payments/paymentThunk'
 
 export default function Home() {
   const dispatch = useAppDispatch()
@@ -34,38 +28,6 @@ export default function Home() {
   )
   const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
   const [selectedKey, setSelectedKey] = useState<string>('')
-
-  function handleAfterAddPayment(): void {
-    const isSyncExpired = checkExpiredSyncDuration()
-
-    if (window.navigator.onLine && isSyncExpired) {
-      handleSyncPayments()
-    }
-  }
-
-  async function handleSyncPayments(): Promise<void> {
-    await dispatch(syncPaymentsIntoOnlineDB())
-    await dispatch(syncPaymentsIntoOfflineDB())
-    //*INFO: save synced_at to storage
-    localStorage.setItem(SYNCED_AT_STORAGE_KEY, dayjs().toString())
-  }
-
-  function checkExpiredSyncDuration(): boolean {
-    const syncDurationEnabled =
-      process.env.NEXT_PUBLIC_SYNC_DURATION_ENABLED === 'true'
-    const durationHours = parseInt(
-      process.env.NEXT_PUBLIC_SYNC_DURATION_HOURS || '0',
-    )
-    const syncedAtStorage = localStorage.getItem(SYNCED_AT_STORAGE_KEY)
-
-    if (!syncDurationEnabled || !durationHours || !syncedAtStorage) {
-      return true
-    }
-
-    const expireAt = dayjs(syncedAtStorage).add(durationHours, 'hour')
-
-    return expireAt.isBefore(dayjs())
-  }
 
   useEffect(() => {
     dispatch(getPaymentsInMonth())
