@@ -89,7 +89,7 @@ const paymentSlice = createSlice({
         state.fetching = false
       })
       .addCase(syncPaymentsIntoOfflineDB.fulfilled, (state, action) => {
-        state.paymentsInMonth = [...state.paymentsInMonth, ...action.payload]
+        state.paymentsInMonth = action.payload
       })
   },
 })

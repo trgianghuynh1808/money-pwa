@@ -21,6 +21,10 @@ class IndexDB {
   public async initialize(): Promise<void> {
     const db = await openDB<IIndexDBSchema>(this._name, this._version, {
       upgrade(db) {
+        // *INFO: create summary store
+        db.createObjectStore('summaries', {
+          keyPath: 'id',
+        })
         // *INFO: create payments store
         db.createObjectStore('payments', {
           keyPath: 'id',

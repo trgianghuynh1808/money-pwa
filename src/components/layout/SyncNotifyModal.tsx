@@ -1,7 +1,8 @@
-import { SYNCED_AT_STORAGE_KEY } from '@/constants'
 import { Dialog, Transition } from '@headlessui/react'
 import dayjs from 'dayjs'
-import { Dispatch, Fragment, SetStateAction } from 'react'
+import { Dispatch, Fragment, SetStateAction, useMemo } from 'react'
+
+import { useAppSelector } from '@/store'
 
 interface ISyncNotifyModalProps {
   isOpen: boolean
@@ -13,9 +14,13 @@ export default function SyncNotifyModal(
   props: Readonly<ISyncNotifyModalProps>,
 ) {
   const { isOpen, setIsOpen, succeed } = props
-  const syncAt = dayjs(localStorage.getItem(SYNCED_AT_STORAGE_KEY)).format(
-    'DD/MM/YY HH:mm:ss',
-  )
+  const { currentSummary } = useAppSelector((state) => state.summaries)
+
+  const syncedAt = useMemo(() => {
+    return currentSummary
+      ? dayjs(currentSummary.synced_at).format('DD/MM/YY HH:mm:ss')
+      : undefined
+  }, [currentSummary])
 
   function closeModal(): void {
     setIsOpen(false)
@@ -54,7 +59,9 @@ export default function SyncNotifyModal(
                       <p className="text-lg text-green-600">
                         Sync xong goy ^.^~
                       </p>
-                      <p className="text-gray-600">{syncAt}</p>
+                      {syncedAt && (
+                        <p className="text-xs text-gray-600">{syncedAt}</p>
+                      )}
                     </>
                   ) : (
                     <p className="text-red-500 text-lg">Mở Wifi ợ ợ ~.~</p>

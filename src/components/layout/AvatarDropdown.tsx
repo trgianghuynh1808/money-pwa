@@ -1,18 +1,19 @@
 import { Menu, Transition } from '@headlessui/react'
 import dayjs from 'dayjs'
 import Image from 'next/image'
-import { Fragment, useContext, useEffect, useState } from 'react'
+import { Fragment, useContext, useMemo, useState } from 'react'
 
 // *INFO: internal modules
-import { INPUT_MODE_SRC_MAP, SYNCED_AT_STORAGE_KEY } from '@/constants'
+import { INPUT_MODE_SRC_MAP } from '@/constants'
 import { AppContext } from '@/contexts'
 import { EInputMode } from '@/enums'
-import { useAppDispatch } from '@/store'
+import { useAppDispatch, useAppSelector } from '@/store'
 import {
   syncPaymentsIntoOfflineDB,
   syncPaymentsIntoOnlineDB,
 } from '@/store/features/payments/paymentThunk'
 import SyncNotifyModal from './SyncNotifyModal'
+import { addSummary, editSummary } from '@/store/features/summary/summaryThunk'
 
 const INPUT_OPTIONS = [
   {
@@ -37,9 +38,14 @@ export default function AvatarDropdown() {
   const dispatch = useAppDispatch()
   const [showNotifyModal, setShowNotifyModal] = useState<boolean>(false)
   const [isSyncCompleted, setIsSyncCompleted] = useState<boolean>()
-  const syncAt = dayjs(localStorage.getItem(SYNCED_AT_STORAGE_KEY)).format(
-    'DD/MM/YY HH:mm:ss',
-  )
+
+  const { currentSummary } = useAppSelector((state) => state.summaries)
+
+  const syncedAt = useMemo(() => {
+    return currentSummary
+      ? dayjs(currentSummary.synced_at).format('DD/MM/YY HH:mm:ss')
+      : undefined
+  }, [currentSummary])
 
   function getAvatarSrc(currentInputMode: EInputMode): string {
     return (
@@ -48,14 +54,33 @@ export default function AvatarDropdown() {
     )
   }
 
+  async function addOrEdit(succeed: boolean): Promise<void> {
+    const payload = {
+      synced_at: new Date(),
+      succeed,
+    }
+
+    if (currentSummary) {
+      await dispatch(
+        editSummary({
+          key: currentSummary.id,
+          payload,
+        }),
+      )
+    } else {
+      await dispatch(addSummary(payload))
+    }
+  }
+
   async function handleSyncPayments(): Promise<void> {
     if (!window?.navigator?.onLine) {
       setIsSyncCompleted(false)
+      await addOrEdit(false)
     } else {
       await dispatch(syncPaymentsIntoOnlineDB())
       await dispatch(syncPaymentsIntoOfflineDB())
+      await addOrEdit(true)
 
-      localStorage.setItem(SYNCED_AT_STORAGE_KEY, new Date().toString())
       setIsSyncCompleted(true)
     }
 
@@ -127,8 +152,9 @@ export default function AvatarDropdown() {
                 >
                   <div className="flex flex-col">
                     <p>Đồng Bộ Dữ Liệu</p>
-
-                    <p className="text-xs text-gray-600">{syncAt}</p>
+                    {syncedAt && (
+                      <p className="text-xs text-gray-600">{syncedAt}</p>
+                    )}
                   </div>
                 </button>
               </Menu.Item>

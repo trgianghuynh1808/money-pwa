@@ -3,10 +3,12 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 // *INFO: internal modules
 import { paymentReducer } from './features/payments/paymentSlice'
+import { summaryReducer } from './features/summary/summarySlice'
 
 export const store = configureStore({
   reducer: {
     payments: paymentReducer,
+    summaries: summaryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
