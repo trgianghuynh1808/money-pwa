@@ -1,17 +1,18 @@
 import { Menu, Transition } from '@headlessui/react'
+import dayjs from 'dayjs'
 import Image from 'next/image'
-import { Fragment, useContext } from 'react'
+import { Fragment, useContext, useEffect, useState } from 'react'
 
 // *INFO: internal modules
-import { INPUT_MODE_SRC_MAP } from '@/constants'
+import { INPUT_MODE_SRC_MAP, SYNCED_AT_STORAGE_KEY } from '@/constants'
 import { AppContext } from '@/contexts'
 import { EInputMode } from '@/enums'
 import { useAppDispatch } from '@/store'
 import {
-  getPaymentsInMonth,
   syncPaymentsIntoOfflineDB,
   syncPaymentsIntoOnlineDB,
 } from '@/store/features/payments/paymentThunk'
+import SyncNotifyModal from './SyncNotifyModal'
 
 const INPUT_OPTIONS = [
   {
@@ -34,6 +35,11 @@ const INPUT_OPTIONS = [
 export default function AvatarDropdown() {
   const { inputMode, setInputMode } = useContext(AppContext)
   const dispatch = useAppDispatch()
+  const [showNotifyModal, setShowNotifyModal] = useState<boolean>(false)
+  const [isSyncCompleted, setIsSyncCompleted] = useState<boolean>()
+  const syncAt = dayjs(localStorage.getItem(SYNCED_AT_STORAGE_KEY)).format(
+    'DD/MM/YY HH:mm:ss',
+  )
 
   function getAvatarSrc(currentInputMode: EInputMode): string {
     return (
@@ -43,12 +49,26 @@ export default function AvatarDropdown() {
   }
 
   async function handleSyncPayments(): Promise<void> {
-    await dispatch(syncPaymentsIntoOnlineDB())
-    await dispatch(syncPaymentsIntoOfflineDB())
+    if (!window?.navigator?.onLine) {
+      setIsSyncCompleted(false)
+    } else {
+      await dispatch(syncPaymentsIntoOnlineDB())
+      await dispatch(syncPaymentsIntoOfflineDB())
+
+      localStorage.setItem(SYNCED_AT_STORAGE_KEY, new Date().toString())
+      setIsSyncCompleted(true)
+    }
+
+    setShowNotifyModal(true)
   }
 
   return (
     <div className="text-right">
+      <SyncNotifyModal
+        isOpen={showNotifyModal}
+        setIsOpen={setShowNotifyModal}
+        succeed={isSyncCompleted}
+      />
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button>
@@ -102,10 +122,14 @@ export default function AvatarDropdown() {
             <div className="px-1 py-1">
               <Menu.Item>
                 <button
-                  className={`text-gray-900 group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  className={`text-gray-900 group flex w-full items-center rounded-md p-2 text-sm`}
                   onClick={handleSyncPayments}
                 >
-                  Đồng Bộ Dữ Liệu
+                  <div className="flex flex-col">
+                    <p>Đồng Bộ Dữ Liệu</p>
+
+                    <p className="text-xs text-gray-600">{syncAt}</p>
+                  </div>
                 </button>
               </Menu.Item>
             </div>
