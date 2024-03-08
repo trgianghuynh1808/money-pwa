@@ -66,8 +66,15 @@ export default function RootLayout({
             }}
           >
             <main className="w-full md:w-3/5 lg:w-1/5 bg-white rounded shadow-lg flex flex-col justify-between">
-              <Header />
-              {!isReady ? <LoadingSpiner /> : <>{children}</>}
+              {!isReady ? (
+                <LoadingSpiner />
+              ) : (
+                <>
+                  <Header />
+                  {children}
+                </>
+              )}
+
               <BottomTabNavigator />
             </main>
           </AppContext.Provider>

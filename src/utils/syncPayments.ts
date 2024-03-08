@@ -22,14 +22,14 @@ async function getOnlinePaymentsInMonth(): Promise<IPayment[]> {
   const startInMonthDate = dayjs().startOf('month').toDate()
   const endInMonthDate = dayjs().endOf('month').toDate()
 
-  const payments = firebaseDBActions.getWithFilter(
+  const payments = await firebaseDBActions.getWithFilter(
     and(
       where('created_at', '>=', startInMonthDate),
       where('created_at', '<=', endInMonthDate),
     ),
   )
 
-  return payments
+  return payments.filter((item) => item.removed !== true)
 }
 
 function addOnlinePaymentPromises(

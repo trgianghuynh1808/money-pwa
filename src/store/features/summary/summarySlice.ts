@@ -26,13 +26,11 @@ const summarySlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addSummary.pending, (state) => {
-        console.log('run here')
         state.loading = true
       })
       .addCase(addSummary.fulfilled, (state, action) => {
         const payload = action.payload as ISummary
         state.loading = false
-        console.log({ payload })
         state.currentSummary = payload
       })
       .addCase(addSummary.rejected, (state, action) => {

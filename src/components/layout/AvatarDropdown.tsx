@@ -1,7 +1,7 @@
 import { Menu, Transition } from '@headlessui/react'
 import dayjs from 'dayjs'
 import Image from 'next/image'
-import { Fragment, useContext, useMemo, useState } from 'react'
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react'
 
 // *INFO: internal modules
 import { INPUT_MODE_SRC_MAP } from '@/constants'
@@ -12,8 +12,12 @@ import {
   syncPaymentsIntoOfflineDB,
   syncPaymentsIntoOnlineDB,
 } from '@/store/features/payments/paymentThunk'
+import {
+  addSummary,
+  editSummary,
+  getSummary,
+} from '@/store/features/summary/summaryThunk'
 import SyncNotifyModal from './SyncNotifyModal'
-import { addSummary, editSummary } from '@/store/features/summary/summaryThunk'
 
 const INPUT_OPTIONS = [
   {
@@ -54,7 +58,7 @@ export default function AvatarDropdown() {
     )
   }
 
-  async function addOrEdit(succeed: boolean): Promise<void> {
+  async function addOrEditSummary(succeed: boolean): Promise<void> {
     const payload = {
       synced_at: new Date(),
       succeed,
@@ -75,17 +79,25 @@ export default function AvatarDropdown() {
   async function handleSyncPayments(): Promise<void> {
     if (!window?.navigator?.onLine) {
       setIsSyncCompleted(false)
-      await addOrEdit(false)
+      await addOrEditSummary(false)
     } else {
       await dispatch(syncPaymentsIntoOnlineDB())
       await dispatch(syncPaymentsIntoOfflineDB())
-      await addOrEdit(true)
+      await addOrEditSummary(true)
 
       setIsSyncCompleted(true)
     }
 
     setShowNotifyModal(true)
   }
+
+  async function fetchSummary(): Promise<void> {
+    await dispatch(getSummary())
+  }
+
+  useEffect(() => {
+    fetchSummary()
+  }, [])
 
   return (
     <div className="text-right">

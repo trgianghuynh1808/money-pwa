@@ -18,11 +18,7 @@ export const getSummary = createAsyncThunk(
 export const addSummary = createAsyncThunk(
   'summaries/addSummary',
   async (payload: TAddPayload<ISummary>): Promise<ISummary | undefined> => {
-    console.log('run add')
-
     const newSummary = await indexDBActions.add(payload)
-
-    console.log({ newSummary })
 
     if (!newSummary) {
       throw new Error('Thêm summary thất bại')
