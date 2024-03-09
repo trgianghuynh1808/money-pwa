@@ -97,10 +97,10 @@ function addOfflinePayments(
   payments: IPayment[],
 ): Promise<IPayment | undefined>[] {
   const convertUnixToDate = (time: Timestamp) => {
-    return time.toDate()
+    return time ? time.toDate() : undefined
   }
 
-  const addPromises = getValidArray(payments).map((payment) => {
+  const addPromises = getValidArray(payments).map(async (payment) => {
     return indexDBActions.add({
       ...payment,
       updated_at: convertUnixToDate(payment.updated_at as any),

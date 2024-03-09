@@ -76,7 +76,6 @@ export default function PaymentForm() {
       payment_at: dayjs(pickDate?.startDate).toDate(),
       updated_at: new Date(),
       price: !existsPayment ? priceNumber : existsPayment.price + priceNumber,
-      indentity_id: uuid,
     }
 
     if (existsPayment) {
@@ -84,7 +83,12 @@ export default function PaymentForm() {
       return
     }
 
-    await dispatch(addPayment(payload))
+    await dispatch(
+      addPayment({
+        ...payload,
+        indentity_id: uuid,
+      }),
+    )
   }
 
   async function handleUpdatePayment(existsPayment: IPayment): Promise<void> {
