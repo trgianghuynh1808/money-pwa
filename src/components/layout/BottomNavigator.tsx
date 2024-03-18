@@ -34,7 +34,7 @@ export default function BottomTabNavigator() {
         </Link>
       </div>
       <p className="text-right w-full text-xs text-black absolute bottom-0">
-        1.0.4
+        1.0.5
       </p>
     </section>
   )
