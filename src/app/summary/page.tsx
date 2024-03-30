@@ -1,5 +1,6 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import dayjs from 'dayjs'
 
 // *INFO: internal modules
 import {
@@ -14,17 +15,28 @@ import {
 import { EViewMode } from '@/enums'
 import { IOption } from '@/interfaces'
 import { useAppDispatch } from '@/store'
-import { getPaymentsInMonth } from '@/store/features/payments/paymentThunk'
+import {
+  getPaymentsFiltered,
+  getPaymentsInMonth,
+} from '@/store/features/payments/paymentThunk'
 
 export default function SummaryPage() {
   const dispatch = useAppDispatch()
   const [monthFilterOption, setMonthFilterOption] =
     useState<IOption>(NOW_MONTH_OPTION)
   const [viewMode, setViewMode] = useState<EViewMode>()
+  const isFilterLastMonth = useMemo(() => {
+    const nowMonth = dayjs().month()
+    return monthFilterOption.value !== nowMonth
+  }, [monthFilterOption])
 
   useEffect(() => {
     dispatch(getPaymentsInMonth())
-  }, [])
+
+    if (isFilterLastMonth) {
+      dispatch(getPaymentsFiltered({ monthFilter: monthFilterOption.value }))
+    }
+  }, [monthFilterOption])
 
   return (
     <SummaryFilterContext.Provider

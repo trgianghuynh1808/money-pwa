@@ -15,8 +15,8 @@ interface ISummaryFilterContext {
 const nowMonth = dayjs().month()
 
 export const NOW_MONTH_OPTION: IOption = {
-  label: `Tháng ${nowMonth + 1}`,
   value: nowMonth,
+  label: `Tháng ${nowMonth + 1}`,
 }
 
 export const SummaryFilterContext = createContext<ISummaryFilterContext>({

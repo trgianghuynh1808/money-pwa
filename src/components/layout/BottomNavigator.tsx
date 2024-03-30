@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { ExploreIcon, HomeIcon } from '../icons'
 import routes from '@/routes'
 import Link from 'next/link'
+import packageJSON from '../../../package.json'
 
 export default function BottomTabNavigator() {
   const pathName = usePathname()
@@ -34,7 +35,7 @@ export default function BottomTabNavigator() {
         </Link>
       </div>
       <p className="text-right w-full text-xs text-black absolute bottom-0">
-        1.0.5
+        {packageJSON.version}
       </p>
     </section>
   )

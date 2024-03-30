@@ -4,10 +4,10 @@ import { useContext } from 'react'
 import MonthFilterLightBox from './MonthFilterLightBox'
 import { SummaryFilterContext } from './summaryFilter.context'
 
-const monthOptions = Array.from(Array(10).keys()).map((item) => {
+const monthOptions = Array.from({ length: 12 }, (_, i) => {
   return {
-    label: `Tháng ${item + 1}`,
-    value: item,
+    value: i,
+    label: `Tháng ${i + 1}`,
   }
 })
 

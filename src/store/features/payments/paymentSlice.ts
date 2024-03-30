@@ -8,6 +8,7 @@ import {
   addPayment,
   archivePayments,
   editPayment,
+  getPaymentsFiltered,
   getPaymentsInLastMonth,
   getPaymentsInMonth,
   removePayment,
@@ -16,7 +17,9 @@ import {
 
 interface IPaymentState {
   paymentsInMonth: IPayment[]
+  // *INFO: offline payments in last month
   paymentsInLastMonth: IPayment[]
+  paymentsFiltered: IPayment[]
   loading: boolean
   fetching: boolean
   error: SerializedError | null
@@ -25,6 +28,7 @@ interface IPaymentState {
 const initialState: IPaymentState = {
   paymentsInMonth: [] as IPayment[],
   paymentsInLastMonth: [] as IPayment[],
+  paymentsFiltered: [] as IPayment[],
   loading: false,
   fetching: false,
   error: null,
@@ -106,6 +110,16 @@ const paymentSlice = createSlice({
       })
       .addCase(archivePayments.rejected, (state) => {
         state.loading = false
+      })
+      .addCase(getPaymentsFiltered.fulfilled, (state, action) => {
+        state.paymentsFiltered = action.payload
+        state.fetching = false
+      })
+      .addCase(getPaymentsFiltered.pending, (state) => {
+        state.fetching = true
+      })
+      .addCase(getPaymentsFiltered.rejected, (state) => {
+        state.fetching = false
       })
   },
 })

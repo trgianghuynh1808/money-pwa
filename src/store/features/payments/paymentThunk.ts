@@ -1,13 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import dayjs from 'dayjs'
+import { and, where } from 'firebase/firestore'
 
 // *INFO: internal modules
-import { indexDB } from '@/db'
+import { firebaseDB, indexDB } from '@/db'
 import { IPayment, TAddPayload, TUpdatePayload } from '@/interfaces'
 import { handleSyncIntoOfflineDB, handleSyncIntoOnlineDB } from '@/utils'
 import { handleArchivePayments } from '@/utils/archivePayments'
 
 const indexDBActions = indexDB.getActions<IPayment>('payments')
+const firebaseDBActions = firebaseDB.getActions<IPayment>('payments')
 
 export const addPayment = createAsyncThunk(
   'payments/addPayment',
@@ -101,5 +103,24 @@ export const archivePayments = createAsyncThunk(
   'payments/archivePayments',
   async (): Promise<void> => {
     await handleArchivePayments()
+  },
+)
+
+export const getPaymentsFiltered = createAsyncThunk(
+  'payments/getPaymentsFiltered',
+  async ({ monthFilter }: { monthFilter: number }): Promise<IPayment[]> => {
+    const startMonthDate = dayjs().month(monthFilter).startOf('month').toDate()
+    const endMonthDate = dayjs().month(monthFilter).endOf('month').toDate()
+
+    const payments = await firebaseDBActions.getWithFilter(
+      and(
+        where('created_at', '>=', startMonthDate),
+        where('created_at', '<=', endMonthDate),
+      ),
+    )
+
+    return payments.filter(
+      (item) => item.removed !== true && item.archived !== true,
+    )
   },
 )

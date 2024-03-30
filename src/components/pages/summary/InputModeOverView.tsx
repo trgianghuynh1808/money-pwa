@@ -4,26 +4,26 @@ import { useContext, useMemo } from 'react'
 // *INFO: internal modules
 import { INPUT_MODE_SRC_MAP } from '@/constants'
 import { EViewMode } from '@/enums'
-import { useAppSelector } from '@/store'
+import { IPayment } from '@/interfaces'
 import { formatNumberWithCommas } from '@/utils'
 import { SummaryFilterContext } from './summaryFilter.context'
 import { calculateTotalByInputMode } from './utils'
 
 interface IInputModeOverviewProps {
   mode: EViewMode
+  paymentsData: IPayment[]
 }
 
 export default function InputModeOverview(
   props: Readonly<IInputModeOverviewProps>,
 ) {
-  const { mode } = props
+  const { paymentsData, mode } = props
   const inputImgSrc = getInputImgSrc(mode)
-  const { paymentsInMonth } = useAppSelector((state) => state.payments)
   const { viewMode, setViewMode } = useContext(SummaryFilterContext)
 
   const totalPayment = useMemo(() => {
-    return calculateTotalByInputMode(paymentsInMonth, mode as any)
-  }, [paymentsInMonth, mode])
+    return calculateTotalByInputMode(paymentsData, mode as any)
+  }, [paymentsData, mode])
   const isActive = useMemo(() => {
     return viewMode === mode
   }, [viewMode, mode])
