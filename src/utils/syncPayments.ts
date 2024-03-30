@@ -29,7 +29,9 @@ async function getOnlinePaymentsInMonth(): Promise<IPayment[]> {
     ),
   )
 
-  return payments.filter((item) => item.removed !== true)
+  return payments.filter(
+    (item) => item.removed !== true && item.archived !== true,
+  )
 }
 
 function addOnlinePaymentPromises(
@@ -118,6 +120,8 @@ export async function handleSyncIntoOnlineDB(): Promise<void> {
     getNotSyncedPayments(),
     getOnlinePaymentsInMonth(),
   ])
+
+  if (!notSyncedOfflinePayments?.length) return
 
   const onlinePaymentsIndentityIds = getValidArray(onlinePayments).map(
     (item) => item.indentity_id,

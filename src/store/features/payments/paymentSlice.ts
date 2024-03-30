@@ -6,7 +6,9 @@ import { IPayment } from '@//interfaces'
 import { getValidArray } from '@/utils'
 import {
   addPayment,
+  archivePayments,
   editPayment,
+  getPaymentsInLastMonth,
   getPaymentsInMonth,
   removePayment,
   syncPaymentsIntoOfflineDB,
@@ -14,6 +16,7 @@ import {
 
 interface IPaymentState {
   paymentsInMonth: IPayment[]
+  paymentsInLastMonth: IPayment[]
   loading: boolean
   fetching: boolean
   error: SerializedError | null
@@ -21,6 +24,7 @@ interface IPaymentState {
 
 const initialState: IPaymentState = {
   paymentsInMonth: [] as IPayment[],
+  paymentsInLastMonth: [] as IPayment[],
   loading: false,
   fetching: false,
   error: null,
@@ -90,6 +94,18 @@ const paymentSlice = createSlice({
       })
       .addCase(syncPaymentsIntoOfflineDB.fulfilled, (state, action) => {
         state.paymentsInMonth = action.payload
+      })
+      .addCase(getPaymentsInLastMonth.fulfilled, (state, action) => {
+        state.paymentsInLastMonth = action.payload
+      })
+      .addCase(archivePayments.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(archivePayments.fulfilled, (state) => {
+        state.loading = false
+      })
+      .addCase(archivePayments.rejected, (state) => {
+        state.loading = false
       })
   },
 })

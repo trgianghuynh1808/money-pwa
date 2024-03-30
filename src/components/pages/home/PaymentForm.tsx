@@ -8,7 +8,10 @@ import { AppContext } from '@/contexts'
 import { useAppDispatch, useAppSelector } from '@/store'
 import {
   addPayment,
+  archivePayments,
   editPayment,
+  getPaymentsInLastMonth,
+  getPaymentsInMonth,
   removePayment,
 } from '@/store/features/payments/paymentThunk'
 import PaymentModal from './PaymentModal'
@@ -18,6 +21,7 @@ import { PaymentFormContext } from './paymentForm.context'
 import { EInputMode } from '@/enums'
 import { getValidArray } from '@/utils'
 import { IPayment, TAddPayload } from '@/interfaces'
+import ArchiveNotifyModal from './ArchiveNotifyModal'
 
 export default function PaymentForm() {
   const dispatch = useAppDispatch()
@@ -35,17 +39,39 @@ export default function PaymentForm() {
     setShowPaymentModal,
     selectedKey,
   } = useContext(PaymentFormContext)
-  const { paymentsInMonth } = useAppSelector((state) => state.payments)
+  const { paymentsInMonth, paymentsInLastMonth } = useAppSelector(
+    (state) => state.payments,
+  )
 
   const [isMounted, setIsMounted] = useState<boolean>(false)
+  const [showArchiveNotifyModal, setShowArchiveNotifyModal] =
+    useState<boolean>(false)
+  const [archiveSucceed, setArchiveSucceed] = useState<boolean>(false)
 
   const isValidDate = useMemo(() => {
     return Boolean(pickDate?.startDate) && Boolean(pickDate?.endDate)
   }, [pickDate])
+  const existsPaymentsInLastMonth = useMemo(() => {
+    return paymentsInLastMonth?.length > 0
+  }, [paymentsInLastMonth])
 
   function onClickAddBtn(): void {
     setFormMode(EPaymentFormMode.ADD)
     setShowPaymentModal(true)
+  }
+
+  async function onClickArchiveBtn(): Promise<void> {
+    if (!window?.navigator?.onLine) {
+      setArchiveSucceed(false)
+    } else {
+      await dispatch(archivePayments())
+      await dispatch(getPaymentsInLastMonth())
+      await dispatch(getPaymentsInMonth())
+
+      setArchiveSucceed(true)
+    }
+
+    setShowArchiveNotifyModal(true)
   }
 
   function getExistsPayment(): IPayment | undefined {
@@ -149,6 +175,11 @@ export default function PaymentForm() {
         setIsOpen={setShowPaymentModal}
         handleOnSubmit={handleSubmitForm}
       />
+      <ArchiveNotifyModal
+        isOpen={showArchiveNotifyModal}
+        setIsOpen={setShowArchiveNotifyModal}
+        succeed={archiveSucceed}
+      />
 
       <div className="col-span-4">
         <DatePicker
@@ -173,13 +204,22 @@ export default function PaymentForm() {
         />
       </div>
       <div className="col-span-2">
-        <button
-          className="inline-flex items-center justify-center w-full h-10 text-base font-medium text-center text-white rounded-lg shadow-sm cursor-pointer hover:text-white bg-blue-400 isabled:opacity-30"
-          disabled={!isValidDate || inputMode === EInputMode.ALL}
-          onClick={onClickAddBtn}
-        >
-          <span className="relative">Thêm</span>
-        </button>
+        {existsPaymentsInLastMonth ? (
+          <button
+            className="inline-flex items-center justify-center w-full h-10 text-base font-medium text-center text-white rounded-lg shadow-sm cursor-pointer hover:text-white bg-blue-400 isabled:opacity-30"
+            onClick={onClickArchiveBtn}
+          >
+            <span className="relative">Archive</span>
+          </button>
+        ) : (
+          <button
+            className="inline-flex items-center justify-center w-full h-10 text-base font-medium text-center text-white rounded-lg shadow-sm cursor-pointer hover:text-white bg-blue-400 isabled:opacity-30"
+            disabled={!isValidDate || inputMode === EInputMode.ALL}
+            onClick={onClickAddBtn}
+          >
+            <span className="relative">Thêm</span>
+          </button>
+        )}
       </div>
     </div>
   )

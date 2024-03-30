@@ -11,7 +11,10 @@ import {
 } from '@/components/pages/home/constants'
 import { PaymentFormContext } from '@/components/pages/home/paymentForm.context'
 import { useAppDispatch } from '@/store'
-import { getPaymentsInMonth } from '@/store/features/payments/paymentThunk'
+import {
+  getPaymentsInLastMonth,
+  getPaymentsInMonth,
+} from '@/store/features/payments/paymentThunk'
 
 export default function Home() {
   const dispatch = useAppDispatch()
@@ -29,8 +32,13 @@ export default function Home() {
   const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
   const [selectedKey, setSelectedKey] = useState<string>('')
 
-  useEffect(() => {
+  function fetchData(): void {
     dispatch(getPaymentsInMonth())
+    dispatch(getPaymentsInLastMonth())
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [])
 
   return (

@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import { indexDB } from '@/db'
 import { IPayment, TAddPayload, TUpdatePayload } from '@/interfaces'
 import { handleSyncIntoOfflineDB, handleSyncIntoOnlineDB } from '@/utils'
+import { handleArchivePayments } from '@/utils/archivePayments'
 
 const indexDBActions = indexDB.getActions<IPayment>('payments')
 
@@ -58,7 +59,11 @@ export const getPaymentsInMonth = createAsyncThunk(
   'payments/getPaymentsInMonth',
   async (): Promise<IPayment[]> => {
     const payments = await indexDBActions.getWithFilter((item) => {
-      return dayjs(item.payment_at).month() === dayjs().month() && !item.removed
+      return (
+        dayjs(item.payment_at).month() === dayjs().month() &&
+        !item.removed &&
+        !item.archived
+      )
     })
 
     return payments ?? []
@@ -76,5 +81,25 @@ export const syncPaymentsIntoOfflineDB = createAsyncThunk(
   'payments/syncPaymentsIntoOfflineDB',
   async (): Promise<IPayment[]> => {
     return (await handleSyncIntoOfflineDB()) as any
+  },
+)
+
+export const getPaymentsInLastMonth = createAsyncThunk(
+  'payments/getPaymentsInLastMonth',
+  async (): Promise<IPayment[]> => {
+    const payments = await indexDBActions.getWithFilter((item) => {
+      const nowMonth = dayjs().month()
+
+      return dayjs(item.payment_at).month() !== nowMonth
+    })
+
+    return payments ?? []
+  },
+)
+
+export const archivePayments = createAsyncThunk(
+  'payments/archivePayments',
+  async (): Promise<void> => {
+    await handleArchivePayments()
   },
 )
