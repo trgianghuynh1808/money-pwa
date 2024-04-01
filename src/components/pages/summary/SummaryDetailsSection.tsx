@@ -1,21 +1,33 @@
+import dayjs from 'dayjs'
 import { useContext, useMemo, useState } from 'react'
 
 // *INFO: internal modules
+import { EyeIcon, EyeSlashIcon } from '@/components/icons'
 import { useAppSelector } from '@/store'
 import { getValidArray, isEmptyArray } from '@/utils'
-import { SummaryFilterContext } from './summaryFilter.context'
 import CategoryView from './CategoryView'
-import { EyeIcon, EyeSlashIcon } from '@/components/icons'
 import DayViewModal from './DayViewModal'
+import { SummaryFilterContext } from './summaryFilter.context'
 
 export default function SummaryDetailsSection() {
-  const { paymentsInMonth } = useAppSelector((state) => state.payments)
-  const { viewMode } = useContext(SummaryFilterContext)
+  const { paymentsInMonth, paymentsFiltered } = useAppSelector(
+    (state) => state.payments,
+  )
+  const { viewMode, monthFilterOption } = useContext(SummaryFilterContext)
+
+  const isFilterLastMonth = useMemo(() => {
+    const nowMonth = dayjs().month()
+    return monthFilterOption.value !== nowMonth
+  }, [monthFilterOption])
+  const paymentsData = useMemo(() => {
+    return isFilterLastMonth ? paymentsFiltered : paymentsInMonth
+  }, [isFilterLastMonth, paymentsFiltered, paymentsInMonth])
+
   const paymentsInViewMode = useMemo(() => {
-    return getValidArray(paymentsInMonth).filter(
+    return getValidArray(paymentsData).filter(
       (item) => item.mode === (viewMode as any),
     )
-  }, [paymentsInMonth, viewMode])
+  }, [paymentsData, viewMode])
 
   const [showDetails, setShowDetails] = useState<boolean>(false)
 

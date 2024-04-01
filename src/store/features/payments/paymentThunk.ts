@@ -1,11 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import dayjs from 'dayjs'
-import { and, where } from 'firebase/firestore'
+import { Timestamp, and, where } from 'firebase/firestore'
 
 // *INFO: internal modules
 import { firebaseDB, indexDB } from '@/db'
 import { IPayment, TAddPayload, TUpdatePayload } from '@/interfaces'
-import { handleSyncIntoOfflineDB, handleSyncIntoOnlineDB } from '@/utils'
+import {
+  convertUnixToDate,
+  getValidArray,
+  handleSyncIntoOfflineDB,
+  handleSyncIntoOnlineDB,
+} from '@/utils'
 import { handleArchivePayments } from '@/utils/archivePayments'
 
 const indexDBActions = indexDB.getActions<IPayment>('payments')
@@ -119,8 +124,13 @@ export const getPaymentsFiltered = createAsyncThunk(
       ),
     )
 
-    return payments.filter(
-      (item) => item.removed !== true && item.archived !== true,
-    )
+    const filtertedPayments = payments.filter((item) => item.removed !== true)
+
+    return getValidArray(filtertedPayments).map((item) => {
+      return {
+        ...item,
+        payment_at: convertUnixToDate(item.payment_at as any) as Date,
+      }
+    })
   },
 )

@@ -1,7 +1,7 @@
 // *INFO: internal modules
 import { firebaseDB, indexDB } from '@/db'
 import { IPayment, TAddPayload } from '@/interfaces'
-import { getValidArray } from './common'
+import { convertUnixToDate, getValidArray } from './common'
 import dayjs from 'dayjs'
 import { Timestamp, and, where } from 'firebase/firestore'
 
@@ -98,10 +98,6 @@ async function updateSyncInfoPayments(payments: IPayment[]): Promise<void> {
 function addOfflinePayments(
   payments: IPayment[],
 ): Promise<IPayment | undefined>[] {
-  const convertUnixToDate = (time: Timestamp) => {
-    return time ? time.toDate() : undefined
-  }
-
   const addPromises = getValidArray(payments).map(async (payment) => {
     return indexDBActions.add({
       ...payment,
