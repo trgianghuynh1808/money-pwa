@@ -1,9 +1,9 @@
 // *INFO: internal modules
 import { firebaseDB, indexDB } from '@/db'
 import { IPayment, TAddPayload } from '@/interfaces'
-import { convertUnixToDate, getValidArray } from './common'
 import dayjs from 'dayjs'
-import { Timestamp, and, where } from 'firebase/firestore'
+import { and, where } from 'firebase/firestore'
+import { convertUnixToDate, getValidArray } from './common'
 
 const indexDBActions = indexDB.getActions<IPayment>('payments')
 const firebaseDBActions = firebaseDB.getActions<IPayment>('payments')
@@ -24,8 +24,8 @@ async function getOnlinePaymentsInMonth(): Promise<IPayment[]> {
 
   const payments = await firebaseDBActions.getWithFilter(
     and(
-      where('created_at', '>=', startInMonthDate),
-      where('created_at', '<=', endInMonthDate),
+      where('payment_at', '>=', startInMonthDate),
+      where('payment_at', '<=', endInMonthDate),
     ),
   )
 

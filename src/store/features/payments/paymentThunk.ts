@@ -94,9 +94,8 @@ export const syncPaymentsIntoOfflineDB = createAsyncThunk(
 export const getPaymentsInLastMonth = createAsyncThunk(
   'payments/getPaymentsInLastMonth',
   async (): Promise<IPayment[]> => {
+    const nowMonth = dayjs().month()
     const payments = await indexDBActions.getWithFilter((item) => {
-      const nowMonth = dayjs().month()
-
       return dayjs(item.payment_at).month() !== nowMonth
     })
 

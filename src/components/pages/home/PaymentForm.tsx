@@ -48,6 +48,8 @@ export default function PaymentForm() {
     useState<boolean>(false)
   const [archiveSucceed, setArchiveSucceed] = useState<boolean>(false)
 
+  console.log(paymentsInLastMonth)
+
   const isValidDate = useMemo(() => {
     return Boolean(pickDate?.startDate) && Boolean(pickDate?.endDate)
   }, [pickDate])
